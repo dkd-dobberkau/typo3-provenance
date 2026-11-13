@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Validate and lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: intl
+          coverage: none
+      - name: Validate composer.json
+        run: composer validate --no-check-lock --no-check-publish
+      - name: Lint PHP files
+        run: find . -name '*.php' -not -path './.Build/*' -print0 | xargs -0 -n1 php -l
+
+  tests:
+    name: Tests (PHP ${{ matrix.php }}, TYPO3 ${{ matrix.typo3 }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { php: '8.2', typo3: '^13.4' }
+          - { php: '8.4', typo3: '^13.4' }
+          - { php: '8.2', typo3: '^14.0' }
+          - { php: '8.4', typo3: '^14.0' }
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: intl, pdo_sqlite
+          coverage: none
+      - name: Install TYPO3 ${{ matrix.typo3 }}
+        run: >
+          composer require --no-interaction --no-progress --with-all-dependencies
+          "typo3/cms-core:${{ matrix.typo3 }}"
+          "typo3/cms-frontend:${{ matrix.typo3 }}"
+          "typo3/cms-fluid:${{ matrix.typo3 }}"
+      - name: Unit tests
+        run: composer test:unit
+      - name: Functional tests (SQLite)
+        run: composer test:functional
+
+  trivy:
+    name: Trivy scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Scan repository for vulnerabilities, secrets and misconfiguration
+        run: >
+          docker run --rm -v "$PWD:/src" aquasec/trivy:0.76.2
+          fs --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --exit-code 1 /src

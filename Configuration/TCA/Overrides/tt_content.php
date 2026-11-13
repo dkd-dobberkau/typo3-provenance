@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+
+defined('TYPO3') or die();
+
+ExtensionManagementUtility::addTCAcolumns('tt_content', [
+    'provenance_document_uid' => [
+        'label' => 'LLL:EXT:provenance/Resources/Private/Language/locallang_db.xlf:tt_content.provenance_document_uid',
+        'config' => [
+            'type' => 'inline',
+            'foreign_table' => 'tx_provenance_document',
+            'maxitems' => 1,
+            'appearance' => [
+                'collapseAll' => false,
+                'expandSingle' => true,
+            ],
+        ],
+    ],
+]);
+
+ExtensionManagementUtility::addToAllTCAtypes(
+    'tt_content',
+    '--div--;locallang_db.xlfab.provenance, provenance_document_uid'
+);

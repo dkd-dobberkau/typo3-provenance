@@ -6,3 +6,7 @@ services:
 
   CmsProvenance\Provenance\:
     resource: '../Classes/*'
+
+  # Instantiated by DataHandler through GeneralUtility::makeInstance()
+  CmsProvenance\Provenance\Hook\AssignDocumentIdentifier:
+    public: true

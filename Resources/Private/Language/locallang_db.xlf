@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" datatype="plaintext" original="EXT:provenance/Resources/Private/Language/locallang_db.xlf" product-name="provenance">
+		<header/>
+		<body>
+			<trans-unit id="tx_provenance_document" resname="tx_provenance_document">
+				<source>Provenance record</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.document_uri" resname="tx_provenance_document.document_uri">
+				<source>Document identifier</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.document_uri.description" resname="tx_provenance_document.document_uri.description">
+				<source>Stable identifier of this document. Assigned automatically and never changed, so it survives URL changes.</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.first_published_at" resname="tx_provenance_document.first_published_at">
+				<source>First published</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.last_substantive_revision_at" resname="tx_provenance_document.last_substantive_revision_at">
+				<source>Last substantive revision</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.last_substantive_revision_at.description" resname="tx_provenance_document.last_substantive_revision_at.description">
+				<source>Last real change to the content. Technical saves and republishing do not count.</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.last_maintained_at" resname="tx_provenance_document.last_maintained_at">
+				<source>Last confirmed as accurate</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.last_maintained_at.description" resname="tx_provenance_document.last_maintained_at.description">
+				<source>When someone last confirmed the content is still accurate, without necessarily changing it (maintainedDate).</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.authors" resname="tx_provenance_document.authors">
+				<source>Authors</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.reviewer" resname="tx_provenance_document.reviewer">
+				<source>Reviewer</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.sources" resname="tx_provenance_document.sources">
+				<source>Sources</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.content_hash" resname="tx_provenance_document.content_hash">
+				<source>Content hash</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.signature" resname="tx_provenance_document.signature">
+				<source>Signature</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.signature_key_id" resname="tx_provenance_document.signature_key_id">
+				<source>Key ID</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.conformance_level" resname="tx_provenance_document.conformance_level">
+				<source>Conformance level</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_document.cms_version" resname="tx_provenance_document.cms_version">
+				<source>Created with</source>
+			</trans-unit>
+			<trans-unit id="conformance_level.1" resname="conformance_level.1">
+				<source>L1 Discoverable</source>
+			</trans-unit>
+			<trans-unit id="conformance_level.2" resname="conformance_level.2">
+				<source>L2 Provenance</source>
+			</trans-unit>
+			<trans-unit id="conformance_level.3" resname="conformance_level.3">
+				<source>L3 Verifiable</source>
+			</trans-unit>
+			<trans-unit id="conformance_level.4" resname="conformance_level.4">
+				<source>L4 Citable</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_source" resname="tx_provenance_source">
+				<source>Provenance source</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_source.url" resname="tx_provenance_source.url">
+				<source>Source URL</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_source.description" resname="tx_provenance_source.description">
+				<source>What does this source support?</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_source.accessed_at" resname="tx_provenance_source.accessed_at">
+				<source>Access date</source>
+			</trans-unit>
+			<trans-unit id="tx_provenance_source.archive_url" resname="tx_provenance_source.archive_url">
+				<source>Archive URL</source>
+			</trans-unit>
+			<trans-unit id="pages.provenance_document_uid" resname="pages.provenance_document_uid">
+				<source>Provenance record</source>
+			</trans-unit>
+			<trans-unit id="tt_content.provenance_document_uid" resname="tt_content.provenance_document_uid">
+				<source>Provenance record</source>
+			</trans-unit>
+			<trans-unit id="be_users.external_identity_uri" resname="be_users.external_identity_uri">
+				<source>External identity</source>
+			</trans-unit>
+			<trans-unit id="be_users.external_identity_uri.description" resname="be_users.external_identity_uri.description">
+				<source>ORCID or another public profile URL. Shown as the author identity in published provenance records.</source>
+			</trans-unit>
+			<trans-unit id="be_users.external_identity_verified" resname="be_users.external_identity_verified">
+				<source>External identity verified</source>
+			</trans-unit>
+			<trans-unit id="tab.provenance" resname="tab.provenance">
+				<source>Provenance</source>
+			</trans-unit>
+			<trans-unit id="tab.authors" resname="tab.authors">
+				<source>Authors</source>
+			</trans-unit>
+			<trans-unit id="tab.sources" resname="tab.sources">
+				<source>Sources</source>
+			</trans-unit>
+			<trans-unit id="tab.signature" resname="tab.signature">
+				<source>Signature</source>
+			</trans-unit>
+			<trans-unit id="tab.conformance" resname="tab.conformance">
+				<source>Conformance</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
