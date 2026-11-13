@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Manual for all four extensions in `Documentation/` (milestone M7):
+  installation to L4, configuration, editorial guide, verification,
+  developer API and known limits.
 - `WellKnownRouter`: one middleware for `/.well-known/content-provenance`
   and its sub-paths, with shared CORS, preflight and method handling.
   Extensions answer a sub-path by implementing `WellKnownHandlerInterface`.

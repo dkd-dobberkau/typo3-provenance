@@ -116,6 +116,15 @@ Functional tests use SQLite unless `typo3DatabaseDriver` and the related
 `typo3Database*` variables point to another database. CI runs the suite against
 TYPO3 13.4 and 14 on PHP 8.2 and 8.4.
 
+## Documentation
+
+The manual in [`Documentation/`](Documentation/Index.rst) covers all four
+extensions: [installation up to L4](Documentation/Installation/Index.rst),
+[configuration](Documentation/Configuration/Index.rst),
+[the editorial guide](Documentation/Editors/Index.rst),
+[verification](Documentation/Verification/Index.rst) and
+[known limits](Documentation/KnownProblems/Index.rst).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
