@@ -83,6 +83,14 @@ It covers standard pages in the default language. The first publication date
 is the page creation date, the author the user of the oldest history entry.
 Running it again only picks up pages that are still without a record.
 
+..  important::
+
+    The author appears in the public record with the real name of that backend
+    user (see :ref:`editors-identity`). The oldest history entry is often an
+    administrator or an import account rather than the person who wrote the
+    text. Check the backend users' real names before running the command, or
+    correct the authors afterwards in the page properties.
+
 ..  _installation-web-server:
 
 Step 4: Let the well-known paths through
