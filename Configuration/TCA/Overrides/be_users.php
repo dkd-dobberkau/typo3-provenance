@@ -31,5 +31,5 @@ ExtensionManagementUtility::addTCAcolumns('be_users', [
 
 ExtensionManagementUtility::addToAllTCAtypes(
     'be_users',
-    '--div--;locallang_db.xlfab.provenance, external_identity_uri, external_identity_verified'
+    '--div--;LLL:EXT:provenance/Resources/Private/Language/locallang_db.xlf:tab.provenance, external_identity_uri, external_identity_verified'
 );

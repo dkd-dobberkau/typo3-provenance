@@ -23,5 +23,5 @@ ExtensionManagementUtility::addTCAcolumns('tt_content', [
 
 ExtensionManagementUtility::addToAllTCAtypes(
     'tt_content',
-    '--div--;locallang_db.xlfab.provenance, provenance_document_uid'
+    '--div--;LLL:EXT:provenance/Resources/Private/Language/locallang_db.xlf:tab.provenance, provenance_document_uid'
 );
