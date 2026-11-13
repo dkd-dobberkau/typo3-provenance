@@ -102,6 +102,56 @@ Well-known endpoints
 The sub-paths are fixed by the specification (Section 3.4): the listing,
 ``keys``, ``keys/{keyId}`` and ``facts/{factId}``. Do not add your own.
 
+..  _developers-fact-lookups:
+
+Adding a lookup to the fact dialog
+==================================
+
+Extensions can help editors research a fact in the :guilabel:`Fact` dialog of
+the rich text editor, as ``provenance_wikidata`` does for Wikidata. A lookup
+is an ES module listed in the editor configuration key
+``provenanceFact.lookups``. Add it in a listener, so no RTE preset has to be
+changed:
+
+..  code-block:: php
+    :caption: EXT:my_lookup/Classes/EventListener/RegisterLookup.php
+
+    use TYPO3\CMS\Core\Attribute\AsEventListener;
+    use TYPO3\CMS\RteCKEditor\Form\Element\Event\AfterPrepareConfigurationForEditorEvent;
+
+    #[AsEventListener]
+    final class RegisterLookup
+    {
+        public function __invoke(AfterPrepareConfigurationForEditorEvent $event): void
+        {
+            $configuration = $event->getConfiguration();
+            $configuration['provenanceFact']['lookups'][] = '@my-vendor/my-lookup/lookup.js';
+            $event->setConfiguration($configuration);
+        }
+    }
+
+When the dialog opens, each module is imported and its default export is
+called with one object:
+
+``form``
+    The dialog's form element.
+
+``quote``
+    The selected words.
+
+``panel``
+    An empty element above the fact's fields for the lookup's own interface.
+    The dialog belongs to the top frame of the backend: create elements with
+    ``panel.ownerDocument``.
+
+``fill(values)``
+    Sets any of ``subject``, ``predicate``, ``objectLiteral``, ``objectUri``
+    and ``sourceUrl`` and marks the changed fields.
+
+A lookup that fails to load is skipped with a console warning. Lookups must
+not call external services from the browser; route requests through a
+backend AJAX route, as ``provenance_wikidata`` does.
+
 ..  _developers-cli:
 
 Commands

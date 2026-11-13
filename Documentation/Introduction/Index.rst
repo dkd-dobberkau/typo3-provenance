@@ -38,6 +38,12 @@ Layers and extensions
         -   ``/.well-known/content-provenance`` lists all published documents
             for auditors and AI agents.
 
+The optional extension ``provenance_wikidata`` is an editorial aid outside
+the layers: editors research a fact in Wikidata from the :guilabel:`Fact`
+dialog (see :ref:`editors-facts-wikidata`). It adds nothing to the
+conformance level and nothing to the published record beyond what editors
+enter.
+
 ..  _introduction-levels:
 
 Conformance levels

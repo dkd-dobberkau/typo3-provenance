@@ -169,6 +169,31 @@ Example:
     *   -   Valid from / until
         -   2025-01-01 / 2025-12-31
 
+..  _editors-facts-wikidata:
+
+Researching a fact in Wikidata
+------------------------------
+
+With the optional extension ``provenance_wikidata`` the :guilabel:`Fact`
+dialog has a field :guilabel:`Look up in Wikidata` above the fact's fields.
+
+#.  Type what the fact is about, for example "Ashmolean", and pick the right
+    entry from the list. The subject becomes its Wikidata address, for
+    example ``http://www.wikidata.org/entity/Q636400``.
+#.  The dialog lists what Wikidata states about the entry, with the source
+    Wikidata gives where there is one.
+#.  Press :guilabel:`Use` next to the statement that matches your text. It
+    fills :guilabel:`Predicate`, :guilabel:`Value` (or :guilabel:`Value as
+    URI`) and :guilabel:`Evidence`.
+#.  Check every field before you press :guilabel:`Create fact`. Wikidata is a
+    source, not proof: if your text says something else, your text and your
+    own evidence count.
+
+Wikidata addresses do not change when an article is renamed and are the same
+in every language, which makes the fact easier to check later. If Wikidata is
+not reachable, the dialog says so and you fill in the fields by hand as
+before.
+
 ..  _editors-checklist:
 
 Checklist before publishing
