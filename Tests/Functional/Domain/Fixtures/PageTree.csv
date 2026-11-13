@@ -1,0 +1,18 @@
+"pages"
+,"uid","pid","title","doktype","hidden","fe_group","starttime","endtime","sys_language_uid","t3ver_wsid","deleted"
+,1,0,"Root",1,0,"",0,0,0,0,0
+,2,1,"Public",1,0,"",0,0,0,0,0
+,3,2,"Public child",1,0,"",0,0,0,0,0
+,4,1,"Members",1,0,"1",0,0,0,0,0
+,5,4,"Below members",1,0,"",0,0,0,0,0
+,6,1,"Hidden",1,1,"",0,0,0,0,0
+,7,6,"Below hidden",1,0,"",0,0,0,0,0
+,8,1,"Not yet",1,0,"",1900000000,0,0,0,0
+,9,1,"Expired",1,0,"",0,1700000000,0,0,0
+,10,1,"Folder",254,0,"",0,0,0,0,0
+,11,10,"Below folder",1,0,"",0,0,0,0,0
+,12,1,"Translation",1,0,"",0,0,1,0,0
+,13,1,"Draft in workspace",1,0,"",0,0,0,1,0
+,14,1,"Deleted",1,0,"",0,0,0,0,1
+,20,0,"Other root",1,0,"",0,0,0,0,0
+,21,20,"Other site page",1,0,"",0,0,0,0,0

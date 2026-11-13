@@ -19,6 +19,10 @@ services:
   CmsProvenance\Provenance\Command\BackfillCommand:
     public: true
 
+  # Public API for the sub-extensions' well-known endpoints
+  CmsProvenance\Provenance\Domain\Repository\PublicPageRepository:
+    public: true
+
   CmsProvenance\Provenance\WellKnown\WellKnownRouter:
     arguments:
       $handlers: !tagged_iterator provenance.well_known_handler

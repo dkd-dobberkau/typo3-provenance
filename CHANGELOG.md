@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `PublicPageRepository`: decides which pages the public well-known endpoints
+  may reveal. A page counts as public only if it and every page above it are
+  visible to anonymous visitors.
 - `AbsoluteUrlResolver` service: absolute site, origin and page URLs even when
   the site base is relative (such as `/`), completing scheme and host from the
   request. The sub-extensions use it for every URL they publish.
