@@ -31,7 +31,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "CmsProvenance\\Provenance\\Tests\\": "Tests/"
+            "CmsProvenance\\Provenance\\Tests\\": "Tests/",
+            "CmsProvenance\\TestWellKnown\\": "Tests/Functional/WellKnown/Fixtures/Extensions/test_wellknown/Classes/"
         }
     },
     "config": {
