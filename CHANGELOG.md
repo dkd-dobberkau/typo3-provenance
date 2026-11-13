@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `AbsoluteUrlResolver` service: absolute site, origin and page URLs even when
+  the site base is relative (such as `/`), completing scheme and host from the
+  request. The sub-extensions use it for every URL they publish.
 - Manual for all four extensions in `Documentation/` (milestone M7):
   installation to L4, configuration, editorial guide, verification,
   developer API and known limits.
