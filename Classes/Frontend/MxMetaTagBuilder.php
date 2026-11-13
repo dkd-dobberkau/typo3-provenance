@@ -37,7 +37,8 @@ final class MxMetaTagBuilder
             'mx:conformsTo' => self::SPECIFICATION,
             'mx:trainingDataPolicy' => trim($trainingDataPolicy),
             'mx:created' => $this->date($jsonLd['datePublished'] ?? null),
-            'mx:modified' => $this->date($jsonLd['dateModified'] ?? null),
+            // Pages that were never edited after creation have no dateModified yet.
+            'mx:modified' => $this->date($jsonLd['dateModified'] ?? $jsonLd['lastSubstantiveRevision'] ?? null),
             'mx:maintainedDate' => $this->date($jsonLd['maintainedDate'] ?? null),
         ];
 

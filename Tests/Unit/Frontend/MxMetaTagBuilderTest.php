@@ -50,6 +50,17 @@ final class MxMetaTagBuilderTest extends UnitTestCase
     }
 
     #[Test]
+    public function modifiedFallsBackToTheLastSubstantiveRevision(): void
+    {
+        $jsonLd = self::JSON_LD;
+        unset($jsonLd['dateModified']);
+
+        $tags = (new MxMetaTagBuilder())->build($jsonLd, 'https://example.org/report', '', '');
+
+        self::assertSame('2026-06-01', $tags['mx:modified']);
+    }
+
+    #[Test]
     public function rendersEscapedMetaElements(): void
     {
         $html = (new MxMetaTagBuilder())->render(['mx:summary' => 'Fish & "chips" <b>']);
