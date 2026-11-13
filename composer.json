@@ -1,0 +1,32 @@
+{
+    "name": "cms-provenance/provenance",
+    "type": "typo3-cms-extension",
+    "description": "Machine-readable provenance records for pages and content elements, emitted as JSON-LD.",
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://cms-provenance.org",
+    "keywords": [
+        "TYPO3",
+        "extension",
+        "provenance",
+        "content-provenance",
+        "json-ld"
+    ],
+    "support": {
+        "issues": "https://github.com/dkd-dobberkau/typo3-provenance/issues",
+        "source": "https://github.com/dkd-dobberkau/typo3-provenance"
+    },
+    "require": {
+        "php": "^8.2",
+        "typo3/cms-core": "^13.4 || ^14.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CmsProvenance\\Provenance\\": "Classes/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "provenance"
+        }
+    }
+}
