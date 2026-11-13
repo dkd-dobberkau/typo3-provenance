@@ -1,0 +1,12 @@
+"be_users"
+,"uid","pid","username","realName","external_identity_uri","external_identity_verified"
+,1,0,"editor-ada","Ada Lovelace","https://orcid.org/0000-0001-2345-6789",1
+"pages"
+,"uid","pid","title","slug","doktype","is_siteroot","provenance_document_uid","abstract","description"
+,1,0,"Root","/",1,1,1,"What the report says & why.","The search engine description."
+,2,1,"Description only","/description-only",1,0,2,"","Only a description."
+,3,1,"Without record","/without-record",1,0,0,"An abstract.",""
+"tx_provenance_document"
+,"uid","pid","hidden","document_uri","first_published_at","last_substantive_revision_at","last_maintained_at","authors"
+,1,1,0,"urn:uuid:7c2f0e1a-0000-4000-8000-000000000011",1778749200,1778752800,1793520000,"1"
+,2,2,0,"urn:uuid:7c2f0e1a-0000-4000-8000-000000000012",1778749200,1778752800,0,"1"

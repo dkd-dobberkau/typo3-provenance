@@ -1,0 +1,14 @@
+categories:
+  provenance:
+    label: 'Content Provenance'
+  provenance.mx:
+    label: 'MX meta tags'
+    parent: provenance
+
+settings:
+  provenance.mx.trainingDataPolicy:
+    label: 'AI training data policy'
+    description: 'Whether pages may be used to train AI models, for example "Permitted with attribution." or "Not permitted." Sent as mx:trainingDataPolicy. Left empty, the tag is not sent and pages stay at MX Level 1.'
+    category: provenance.mx
+    type: string
+    default: ''

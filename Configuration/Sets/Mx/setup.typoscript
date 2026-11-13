@@ -1,0 +1,4 @@
+# Emits the provenance record of the current page as MX meta tags in <head>
+# (Machine Experience, drafts of The Gathering). Needs the "provenance" set.
+page.headerData.1795 = USER
+page.headerData.1795.userFunc = CmsProvenance\Provenance\Frontend\MxMetaHeaderData->render

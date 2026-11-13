@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Site set `cms-provenance/provenance-mx` (optional): the record of each page
+  as MX meta tags (`<meta name="mx:…">`, Machine Experience drafts of The
+  Gathering), with the site setting `provenance.mx.trainingDataPolicy`.
+
 - `ConformanceLevel` service: the level a record reaches (specification
   Section 4, Draft 0.4), computed from the record. An incomplete record (no
   author, an author without profile URI, a source without description or

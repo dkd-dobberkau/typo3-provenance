@@ -29,6 +29,34 @@ Site sets
     ``tt_content.stdWrap.postUserFunc``. If your site package uses that
     property itself, only one of the two takes effect.
 
+..  confval:: cms-provenance/provenance-mx
+    :name: set-provenance-mx
+    :type: site set
+
+    Optional. Also emits the record of each page as MX meta tags
+    (`Machine Experience <https://mx.allabout.network/>`__, drafts of The
+    Gathering), through ``page.headerData.1795``: ``author``,
+    ``mx:canonicalUri``, ``mx:summary``, ``mx:conformsTo``,
+    ``mx:trainingDataPolicy``, ``mx:created``, ``mx:modified`` and
+    ``mx:maintainedDate``. The summary is the page's :guilabel:`Abstract`,
+    else its :guilabel:`Description`. ``mx:conformsTo`` names this
+    specification, never MX itself. The tags are not signed; the signed
+    record stays the JSON-LD block.
+
+    MX Level 2 needs all of ``mx:canonicalUri``, ``mx:summary``,
+    ``mx:conformsTo`` and ``mx:trainingDataPolicy``. A page without a summary,
+    or a site without the setting below, stays at MX Level 1; nothing claims
+    a level.
+
+..  confval:: provenance.mx.trainingDataPolicy
+    :name: setting-mx-training-data-policy
+    :type: string
+    :default: (empty)
+
+    Site setting of the set above: whether pages may be used to train AI
+    models, for example "Permitted with attribution." Sent as
+    ``mx:trainingDataPolicy``; left empty, the tag is not sent.
+
 ..  _configuration-rte:
 
 Fact button in the rich text editor

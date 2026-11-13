@@ -16,6 +16,9 @@ services:
   CmsProvenance\Provenance\Frontend\JsonLdHeaderData:
     public: true
 
+  CmsProvenance\Provenance\Frontend\MxMetaHeaderData:
+    public: true
+
   CmsProvenance\Provenance\Command\BackfillCommand:
     public: true
 

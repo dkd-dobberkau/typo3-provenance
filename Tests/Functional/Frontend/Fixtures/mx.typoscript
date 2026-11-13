@@ -1,0 +1,6 @@
+page = PAGE
+page.10 = TEXT
+page.10.value = Hello
+
+@import 'EXT:provenance/Configuration/Sets/Provenance/setup.typoscript'
+@import 'EXT:provenance/Configuration/Sets/Mx/setup.typoscript'

@@ -1,0 +1,4 @@
+name: cms-provenance/provenance-mx
+label: 'Content Provenance: MX meta tags'
+dependencies:
+  - cms-provenance/provenance
