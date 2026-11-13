@@ -14,8 +14,9 @@ These are known and tracked; they do not make a site non-conformant.
     accurate` by hand; the split save button described in the product
     requirements is not built yet.
 *   **No conformance badge in the page tree.**
-*   **Facts are entered as quotes**, not marked in the rich text editor. A
-    quote across formatting is not anchored on the page.
+*   **Facts mark quotes, not markup.** The :guilabel:`Fact` button creates a
+    fact from the selected words; the text is not changed. A quote across
+    formatting or a link is not anchored on the page.
 *   **Pages are signed when rendered.** A page not visited since the key was
     created or the cache was flushed appears unsigned in the audit listing.
 *   **Uncached content inside the content area breaks signatures.** See

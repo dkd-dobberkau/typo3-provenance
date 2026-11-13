@@ -29,6 +29,40 @@ Site sets
     ``tt_content.stdWrap.postUserFunc``. If your site package uses that
     property itself, only one of the two takes effect.
 
+..  _configuration-rte:
+
+Fact button in the rich text editor
+===================================
+
+The facts extension ships the RTE preset ``provenance``: the TYPO3 default
+preset plus the :guilabel:`Fact` button. Enable it with page TSconfig, for
+example in the site's :file:`page.tsconfig`:
+
+..  code-block:: typoscript
+
+    RTE.default.preset = provenance
+
+To add the button to your own preset, load the plugin and add the toolbar
+item. TYPO3 merges imported YAML lists by position, so repeat the complete
+``importModules`` list of your preset:
+
+..  code-block:: yaml
+
+    editor:
+      config:
+        importModules:
+          - { module: '@typo3/rte-ckeditor/plugin/whitespace.js', exports: [ 'Whitespace' ] }
+          - { module: '@typo3/rte-ckeditor/plugin/typo3-link.js', exports: [ 'Typo3Link' ] }
+          - { module: '@cms-provenance/provenance-facts/fact-plugin.js', exports: [ 'ProvenanceFact' ] }
+        toolbar:
+          items:
+            # … your items …
+            - provenanceFact
+
+The button creates the fact through a backend AJAX route with the editor's
+permissions; editors need write access to the facts table like for the
+:guilabel:`Provenance facts` tab.
+
 ..  _configuration-extension-settings:
 
 Extension settings

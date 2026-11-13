@@ -103,7 +103,14 @@ system or a fact checker can then point to exactly that statement rather than
 the whole page. Add facts sparingly, for the statements people are most likely
 to quote.
 
-Open the content element, tab :guilabel:`Provenance facts`, and add a fact:
+The quickest way is the :guilabel:`Fact` button in the rich text editor:
+select the words that state the fact, press :guilabel:`Fact`, fill in the
+dialog and press :guilabel:`Create fact`. The selected words become the quote.
+The text itself is not changed; reload the form to see the new fact in the
+tab :guilabel:`Provenance facts`. The button needs a saved content element.
+
+You can also open the tab :guilabel:`Provenance facts` and add a fact there.
+The fields are the same:
 
 :guilabel:`Fact ID`
     A short, unique, lowercase name such as ``employees-2025``. It becomes
