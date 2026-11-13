@@ -22,6 +22,5 @@ final readonly class ProvenanceRecord
         public array $authors,
         public ?Author $reviewer,
         public array $sources,
-        public int $conformanceLevel,
     ) {}
 }

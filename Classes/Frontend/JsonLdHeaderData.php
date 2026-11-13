@@ -6,6 +6,7 @@ namespace CmsProvenance\Provenance\Frontend;
 
 use CmsProvenance\Provenance\Domain\Repository\ProvenanceRecordRepository;
 use CmsProvenance\Provenance\Event\BeforeJsonLdEmittedEvent;
+use CmsProvenance\Provenance\Service\ConformanceLevel;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
@@ -25,6 +26,7 @@ final readonly class JsonLdHeaderData
         private EventDispatcherInterface $eventDispatcher,
         private PackageManager $packageManager,
         private Typo3Version $typo3Version,
+        private ConformanceLevel $conformanceLevel,
     ) {}
 
     // Required for userFunc callbacks since TYPO3 14; ignored by TYPO3 13.
@@ -49,14 +51,18 @@ final readonly class JsonLdHeaderData
             $this->generator()
         );
         $event = $this->eventDispatcher->dispatch(new BeforeJsonLdEmittedEvent($jsonLd, $record, $request));
-        if ($event->getJsonLd() === []) {
+        $jsonLd = $event->getJsonLd();
+        if ($jsonLd === []) {
             return '';
         }
+        // Unsigned at this point: L2 at most. The signing extension raises the
+        // level once the page is signed.
+        $jsonLd['cpsConformance'] = $this->conformanceLevel->of($jsonLd, false, false);
 
         // JSON_HEX_TAG turns "<" and ">" into < and >, so editor
         // content can never close the script element.
         $json = json_encode(
-            $event->getJsonLd(),
+            $jsonLd,
             JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_THROW_ON_ERROR
         );
 

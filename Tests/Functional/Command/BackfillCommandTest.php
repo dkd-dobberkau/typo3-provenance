@@ -33,7 +33,6 @@ final class BackfillCommandTest extends FunctionalTestCase
         self::assertSame(1710000000, (int)$root['last_substantive_revision_at']);
         self::assertSame('1', (string)$root['authors']);
         self::assertSame(1, (int)$root['pid']);
-        self::assertSame(2, (int)$root['conformance_level']);
     }
 
     #[Test]

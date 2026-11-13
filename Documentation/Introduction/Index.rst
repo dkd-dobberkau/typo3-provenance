@@ -43,8 +43,10 @@ Layers and extensions
 Conformance levels
 ==================
 
-A site claims a level in each record (``cpsConformance``) and in the audit
-endpoint.
+Each page claims the level it actually reaches in its record
+(``cpsConformance``); the audit endpoint claims the lowest level among its
+pages. The level is computed, not configured. Levels are cumulative, so a page
+whose record is incomplete stays at L1 even when it is signed and has facts.
 
 ..  list-table::
     :header-rows: 1
@@ -54,16 +56,20 @@ endpoint.
         -   Requires
         -   Installed extensions
     *   -   L1 Discoverable
-        -   Sitemap, canonical URLs, basic schema.org
-        -   none (a well-run TYPO3 site)
+        -   XML sitemap and a canonical URL on every page
+        -   none; for example ``typo3/cms-seo``. The extensions assume L1, the
+            conformance suite checks it
     *   -   L2 Provenance
-        -   A complete record on every page
+        -   A complete record: at least one author, every author with a public
+            profile URI (see :ref:`editors-identity`), every source with a
+            description and an access date
         -   ``provenance``
     *   -   L3 Verifiable
-        -   Signed records
+        -   The record is signed
         -   plus ``provenance_signing``
     *   -   L4 Citable
-        -   Addressable facts and the audit endpoint
+        -   The audit endpoint is live. Facts are optional; those a page has
+            are addressable
         -   plus ``provenance_audit`` and ``provenance_facts``
 
 ..  _introduction-what-it-is-not:

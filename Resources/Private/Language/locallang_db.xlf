@@ -45,23 +45,8 @@
 			<trans-unit id="tx_provenance_document.signature_key_id" resname="tx_provenance_document.signature_key_id">
 				<source>Key ID</source>
 			</trans-unit>
-			<trans-unit id="tx_provenance_document.conformance_level" resname="tx_provenance_document.conformance_level">
-				<source>Conformance level</source>
-			</trans-unit>
 			<trans-unit id="tx_provenance_document.cms_version" resname="tx_provenance_document.cms_version">
 				<source>Created with</source>
-			</trans-unit>
-			<trans-unit id="conformance_level.1" resname="conformance_level.1">
-				<source>L1 Discoverable</source>
-			</trans-unit>
-			<trans-unit id="conformance_level.2" resname="conformance_level.2">
-				<source>L2 Provenance</source>
-			</trans-unit>
-			<trans-unit id="conformance_level.3" resname="conformance_level.3">
-				<source>L3 Verifiable</source>
-			</trans-unit>
-			<trans-unit id="conformance_level.4" resname="conformance_level.4">
-				<source>L4 Citable</source>
 			</trans-unit>
 			<trans-unit id="tx_provenance_source" resname="tx_provenance_source">
 				<source>Provenance source</source>

@@ -35,6 +35,12 @@ final class JsonLdOutputTest extends FunctionalTestCase
     }
 
     #[Test]
+    public function recordWithoutAnAuthorUriClaimsOnlyLevelOne(): void
+    {
+        self::assertSame(1, $this->fetchJsonLd('/anonymous-author')['cpsConformance']);
+    }
+
+    #[Test]
     public function authorsExposeIdentityAndNameButNeverTheUsername(): void
     {
         $response = $this->fetchBody('/');

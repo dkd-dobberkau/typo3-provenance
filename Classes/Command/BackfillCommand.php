@@ -19,8 +19,9 @@ use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
- * Creates default provenance records for existing pages, so a site reaches
- * conformance level L2 without editorial work. Only standard pages in the
+ * Creates default provenance records for existing pages, so a site gets its
+ * records without editorial work; L2 also needs authors with a public profile
+ * URI. Only standard pages in the
  * default language and live workspace are covered; the page rows themselves
  * are not touched apart from the reference, so their timestamps stay as they are.
  */
@@ -101,7 +102,6 @@ final class BackfillCommand extends Command
             // editors refine it once they mark substantive revisions.
             'last_substantive_revision_at' => (int)$page['SYS_LASTCHANGED'] > 0 ? (int)$page['SYS_LASTCHANGED'] : $created,
             'authors' => (string)($this->findCreatingUser((int)$page['uid']) ?? ''),
-            'conformance_level' => 2,
             'cms_version' => 'TYPO3 ' . $this->typo3Version->getVersion(),
         ]);
         $documentUid = (int)$documentConnection->lastInsertId();

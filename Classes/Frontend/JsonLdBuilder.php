@@ -38,7 +38,6 @@ final class JsonLdBuilder
             'lastSubstantiveRevision' => $this->dateTime($record->lastSubstantiveRevisionAt),
             'maintainedDate' => $this->dateTime($record->lastMaintainedAt),
             'citation' => $record->sources !== [] ? array_map($this->citation(...), $record->sources) : null,
-            'cpsConformance' => $record->conformanceLevel,
             'generator' => $generator,
         ];
 
@@ -70,7 +69,9 @@ final class JsonLdBuilder
             '@type' => 'WebPage',
             'url' => $source->url,
             'name' => $source->description !== '' ? $source->description : null,
-            'accessDate' => $source->accessedAt !== null ? gmdate('Y-m-d', $source->accessedAt) : null,
+            // A date field holds midnight in the server time zone; formatting it in
+            // UTC would give the previous day east of Greenwich.
+            'accessDate' => $source->accessedAt !== null ? date('Y-m-d', $source->accessedAt) : null,
             'archivedAt' => $source->archiveUrl,
         ], static fn(?string $value): bool => $value !== null);
     }

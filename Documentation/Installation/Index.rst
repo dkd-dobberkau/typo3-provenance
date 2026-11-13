@@ -18,6 +18,8 @@ Requirements
 *   PHP extensions ``intl`` and ``sodium`` (``sodium`` for signing)
 *   A page tree whose content sits inside ``<main>`` (see
     :ref:`configuration-content-area`)
+*   An XML sitemap and canonical URLs, for example with ``typo3/cms-seo``:
+    together they make level L1, on which all higher levels build
 
 ..  _installation-packages:
 
@@ -83,6 +85,10 @@ It covers standard pages in the default language. The first publication date
 is the page creation date, the author the user of the oldest history entry.
 Running it again only picks up pages that are still without a record.
 
+A page reaches L2 only when its record is complete: every author needs a
+public profile URI in the backend user record (see :ref:`editors-identity`).
+Until then the page claims L1.
+
 ..  important::
 
     The author appears in the public record with the real name of that backend
@@ -142,7 +148,8 @@ Step 6: Audit endpoint and facts (L4)
 Nothing to do: with ``provenance_audit`` installed,
 ``/.well-known/content-provenance`` lists the site's documents. With
 ``provenance_facts`` and its site set, editors can add facts to content
-elements (see :ref:`editors-facts`), and records with facts claim L4.
+elements (see :ref:`editors-facts`). With the audit endpoint, signed pages
+reach L4; facts make them citable down to single statements.
 
 ..  _installation-check:
 

@@ -108,20 +108,6 @@ return [
                 'readOnly' => true,
             ],
         ],
-        'conformance_level' => [
-            'label' => $ll . 'tx_provenance_document.conformance_level',
-            'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'items' => [
-                    ['label' => $ll . 'conformance_level.1', 'value' => 1],
-                    ['label' => $ll . 'conformance_level.2', 'value' => 2],
-                    ['label' => $ll . 'conformance_level.3', 'value' => 3],
-                    ['label' => $ll . 'conformance_level.4', 'value' => 4],
-                ],
-                'default' => 2,
-            ],
-        ],
         'cms_version' => [
             'label' => $ll . 'tx_provenance_document.cms_version',
             'config' => [
@@ -137,7 +123,7 @@ return [
                 --div--;' . $ll . 'tab.authors, authors, reviewer,
                 --div--;' . $ll . 'tab.sources, sources,
                 --div--;' . $ll . 'tab.signature, content_hash, signature, signature_key_id,
-                --div--;' . $ll . 'tab.conformance, conformance_level, cms_version,
+                --div--;' . $ll . 'tab.conformance, cms_version,
                 --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access, hidden',
         ],
     ],

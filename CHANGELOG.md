@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `ConformanceLevel` service: the level a record reaches (specification
+  Section 4, Draft 0.4), computed from the record. An incomplete record (no
+  author, an author without profile URI, a source without description or
+  access date) stays at L1.
 - `PublicPageRepository`: decides which pages the public well-known endpoints
   may reveal. A page counts as public only if it and every page above it are
   visible to anonymous visitors.
@@ -38,3 +42,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
   Trivy scan.
 - Repository skeleton: composer.json, ext_emconf.php, Services.yaml,
   extension icon, contribution guide (milestone M1).
+
+### Changed
+
+- Breaking: the conformance level is computed instead of chosen. The field
+  `conformance_level` of the provenance record is removed. After updating,
+  flush the caches; the audit listing shows the new levels once each page has
+  been rendered again.
+
+### Fixed
+
+- The access date of sources was one day early on servers east of UTC: date
+  fields hold midnight in the server time zone and were formatted in UTC.

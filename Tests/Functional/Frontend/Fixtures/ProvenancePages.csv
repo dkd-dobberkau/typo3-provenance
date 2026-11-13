@@ -7,10 +7,12 @@
 ,1,0,"Root","/",1,1,1
 ,2,1,"Without record","/without-record",1,0,0
 ,3,1,"Hidden record","/hidden-record",1,0,2
+,4,1,"Anonymous author","/anonymous-author",1,0,3
 "tx_provenance_document"
-,"uid","pid","hidden","document_uri","first_published_at","last_substantive_revision_at","authors","conformance_level"
-,1,1,0,"urn:uuid:7c2f0e1a-0000-4000-8000-000000000001",1778749200,1778752800,"1,2",2
-,2,3,1,"urn:uuid:7c2f0e1a-0000-4000-8000-000000000002",1778749200,1778752800,"1",2
+,"uid","pid","hidden","document_uri","first_published_at","last_substantive_revision_at","authors"
+,1,1,0,"urn:uuid:7c2f0e1a-0000-4000-8000-000000000001",1778749200,1778752800,"1,2"
+,2,3,1,"urn:uuid:7c2f0e1a-0000-4000-8000-000000000002",1778749200,1778752800,"1"
+,3,4,0,"urn:uuid:7c2f0e1a-0000-4000-8000-000000000003",1778749200,1778752800,"2"
 "tx_provenance_source"
 ,"uid","pid","document_uid","sorting","url","description","accessed_at"
 ,1,1,1,256,"https://example.org/report","Breaks out of </script><script>alert(1)</script>",1778716800

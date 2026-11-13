@@ -66,7 +66,6 @@ final readonly class ProvenanceRecordRepository
             authors: $this->findAuthors((string)$row['authors']),
             reviewer: $reviewers[0] ?? null,
             sources: $this->findSources($documentUid),
-            conformanceLevel: (int)$row['conformance_level'],
         );
     }
 

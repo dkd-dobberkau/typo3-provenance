@@ -62,13 +62,13 @@ final class ProvenanceDocumentTest extends FunctionalTestCase
 
         $this->processDatamap([
             'tx_provenance_document' => [
-                $uid => ['document_uri' => '', 'conformance_level' => 3],
+                $uid => ['document_uri' => '', 'last_maintained_at' => 1800000000],
             ],
         ]);
 
         $record = BackendUtility::getRecord('tx_provenance_document', $uid);
         self::assertSame($identifier, $record['document_uri']);
-        self::assertSame(3, (int)$record['conformance_level']);
+        self::assertSame(1800000000, (int)$record['last_maintained_at']);
     }
 
     #[Test]
