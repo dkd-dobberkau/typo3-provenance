@@ -1,0 +1,16 @@
+"be_users"
+,"uid","pid","username","realName","external_identity_uri","external_identity_verified"
+,1,0,"editor-ada","Ada Lovelace","https://orcid.org/0000-0001-2345-6789",1
+,2,0,"editor-anon","","",0
+"pages"
+,"uid","pid","title","slug","doktype","is_siteroot","provenance_document_uid"
+,1,0,"Root","/",1,1,1
+,2,1,"Without record","/without-record",1,0,0
+,3,1,"Hidden record","/hidden-record",1,0,2
+"tx_provenance_document"
+,"uid","pid","hidden","document_uri","first_published_at","last_substantive_revision_at","authors","conformance_level"
+,1,1,0,"urn:uuid:7c2f0e1a-0000-4000-8000-000000000001",1778749200,1778752800,"1,2",2
+,2,3,1,"urn:uuid:7c2f0e1a-0000-4000-8000-000000000002",1778749200,1778752800,"1",2
+"tx_provenance_source"
+,"uid","pid","document_uid","sorting","url","description","accessed_at"
+,1,1,1,256,"https://example.org/report","Breaks out of </script><script>alert(1)</script>",1778716800

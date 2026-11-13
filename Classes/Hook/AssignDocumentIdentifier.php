@@ -10,8 +10,8 @@ use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\MathUtility;
 
 /**
- * Gives every new provenance document its stable identifier and records the
- * CMS version that created it. Both fields are read-only in the backend; on
+ * Gives every new provenance document its stable identifier, a first
+ * publication date (now, unless one is given) and the CMS version that created it. Both fields are read-only in the backend; on
  * updates any submitted value for the identifier is dropped so it never changes.
  */
 final readonly class AssignDocumentIdentifier
@@ -40,6 +40,9 @@ final readonly class AssignDocumentIdentifier
 
         if (trim((string)($fieldArray['document_uri'] ?? '')) === '') {
             $fieldArray['document_uri'] = $this->identifierGenerator->generate();
+        }
+        if ((int)($fieldArray['first_published_at'] ?? 0) <= 0) {
+            $fieldArray['first_published_at'] = $GLOBALS['EXEC_TIME'] ?? time();
         }
         $fieldArray['cms_version'] = 'TYPO3 ' . $this->typo3Version->getVersion();
     }

@@ -35,6 +35,17 @@ final class ProvenanceDocumentTest extends FunctionalTestCase
     }
 
     #[Test]
+    public function newDocumentIsDatedFirstPublishedUnlessGiven(): void
+    {
+        $before = time();
+        $dated = $this->createDocument([]);
+        $given = $this->createDocument(['first_published_at' => 1700000000]);
+
+        self::assertGreaterThanOrEqual($before, (int)BackendUtility::getRecord('tx_provenance_document', $dated)['first_published_at']);
+        self::assertSame(1700000000, (int)BackendUtility::getRecord('tx_provenance_document', $given)['first_published_at']);
+    }
+
+    #[Test]
     public function identifierGivenOnCreationIsKept(): void
     {
         $uid = $this->createDocument(['document_uri' => 'urn:uuid:00000000-0000-4000-8000-000000000001']);

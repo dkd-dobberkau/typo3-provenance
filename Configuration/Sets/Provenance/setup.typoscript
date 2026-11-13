@@ -1,0 +1,4 @@
+# Emits the provenance record of the current page as JSON-LD in <head>.
+# Expects the page object to be named "page", as in most site packages.
+page.headerData.1794 = USER
+page.headerData.1794.userFunc = CmsProvenance\Provenance\Frontend\JsonLdHeaderData->render

@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- JSON-LD output of the page provenance record via the site set
+  `cms-provenance/provenance` (milestone M3), with the
+  `BeforeJsonLdEmittedEvent` for sub-extensions. Output is escaped so record
+  content cannot leave the script element; usernames are never published.
+- `provenance:backfill` command (with `--dry-run`) creating records for
+  existing standard pages, taking the author from the oldest history entry.
+- New documents get a first publication date when none is given.
 - Core data model (milestone M2): tables `tx_provenance_document` and
   `tx_provenance_source`, provenance record on pages and content elements,
   external identity fields on backend users.

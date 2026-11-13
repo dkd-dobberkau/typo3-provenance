@@ -6,7 +6,15 @@ services:
 
   CmsProvenance\Provenance\:
     resource: '../Classes/*'
+    exclude: '../Classes/Domain/Model/*'
 
   # Instantiated by DataHandler through GeneralUtility::makeInstance()
   CmsProvenance\Provenance\Hook\AssignDocumentIdentifier:
+    public: true
+
+  # Instantiated by the USER content object through GeneralUtility::makeInstance()
+  CmsProvenance\Provenance\Frontend\JsonLdHeaderData:
+    public: true
+
+  CmsProvenance\Provenance\Command\BackfillCommand:
     public: true
