@@ -18,3 +18,7 @@ services:
 
   CmsProvenance\Provenance\Command\BackfillCommand:
     public: true
+
+  CmsProvenance\Provenance\WellKnown\WellKnownRouter:
+    arguments:
+      $handlers: !tagged_iterator provenance.well_known_handler

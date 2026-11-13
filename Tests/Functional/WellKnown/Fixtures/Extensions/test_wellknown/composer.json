@@ -1,0 +1,19 @@
+{
+    "name": "cms-provenance/test-wellknown",
+    "type": "typo3-cms-extension",
+    "description": "Test fixture: registers well-known handlers",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "cms-provenance/provenance": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "CmsProvenance\\TestWellKnown\\": "Classes/"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "test_wellknown"
+        }
+    }
+}

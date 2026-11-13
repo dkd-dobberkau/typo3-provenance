@@ -94,6 +94,16 @@ Listen to `CmsProvenance\Provenance\Event\BeforeJsonLdEmittedEvent` to add or
 change properties. The signing and facts extensions use it to add signatures
 and claims to the same block.
 
+### Well-known endpoints
+
+`/.well-known/content-provenance` and its sub-paths are served by one router
+in this extension. To answer a sub-path, implement
+`CmsProvenance\Provenance\WellKnown\WellKnownHandlerInterface`; services with
+`autoconfigure: true` are registered automatically. The router adds CORS
+headers, answers preflight requests, rejects write methods with 405 and
+returns a JSON 404 for unknown sub-paths. The audit extension handles the
+endpoint itself, the signing extension `keys`.
+
 ## Development
 
 ```bash

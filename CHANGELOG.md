@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- `WellKnownRouter`: one middleware for `/.well-known/content-provenance`
+  and its sub-paths, with shared CORS, preflight and method handling.
+  Extensions answer a sub-path by implementing `WellKnownHandlerInterface`.
 - JSON-LD output of the page provenance record via the site set
   `cms-provenance/provenance` (milestone M3), with the
   `BeforeJsonLdEmittedEvent` for sub-extensions. Output is escaped so record
