@@ -93,6 +93,72 @@
 			<trans-unit id="tab.conformance" resname="tab.conformance">
 				<source>Conformance</source>
 			</trans-unit>
+			<trans-unit id="sys_file_metadata.palette.provenance" resname="sys_file_metadata.palette.provenance">
+				<source>Provenance</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.tx_provenance_license" resname="sys_file_metadata.tx_provenance_license">
+				<source>Licence (URL)</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.tx_provenance_license.description" resname="sys_file_metadata.tx_provenance_license.description">
+				<source>Web address of the licence, for example https://creativecommons.org/licenses/by/4.0/</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.tx_provenance_digital_source_type" resname="sys_file_metadata.tx_provenance_digital_source_type">
+				<source>How the media came to exist (IPTC digital source type)</source>
+			</trans-unit>
+			<trans-unit id="sys_file_metadata.tx_provenance_digital_source_type.none" resname="sys_file_metadata.tx_provenance_digital_source_type.none">
+				<source>Not stated</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.digitalCapture" resname="digital_source_type.digitalCapture">
+				<source>Digital capture sampled from real life</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.computationalCapture" resname="digital_source_type.computationalCapture">
+				<source>Multi-frame computational capture sampled from real life</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.negativeFilm" resname="digital_source_type.negativeFilm">
+				<source>Digitised from a transparent negative</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.positiveFilm" resname="digital_source_type.positiveFilm">
+				<source>Digitised from a transparent positive</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.print" resname="digital_source_type.print">
+				<source>Digitised from a non-transparent medium</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.humanEdits" resname="digital_source_type.humanEdits">
+				<source>Human-edited media</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.compositeWithTrainedAlgorithmicMedia" resname="digital_source_type.compositeWithTrainedAlgorithmicMedia">
+				<source>Edited using Generative AI</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.algorithmicallyEnhanced" resname="digital_source_type.algorithmicallyEnhanced">
+				<source>Algorithmically-altered media</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.digitalCreation" resname="digital_source_type.digitalCreation">
+				<source>Digital creation</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.dataDrivenMedia" resname="digital_source_type.dataDrivenMedia">
+				<source>Data-driven media</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.trainedAlgorithmicMedia" resname="digital_source_type.trainedAlgorithmicMedia">
+				<source>Created using Generative AI</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.algorithmicMedia" resname="digital_source_type.algorithmicMedia">
+				<source>Pure algorithmic media</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.screenCapture" resname="digital_source_type.screenCapture">
+				<source>Screen capture</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.virtualRecording" resname="digital_source_type.virtualRecording">
+				<source>Virtual event recording</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.composite" resname="digital_source_type.composite">
+				<source>Composite of elements</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.compositeCapture" resname="digital_source_type.compositeCapture">
+				<source>Composite of captured elements</source>
+			</trans-unit>
+			<trans-unit id="digital_source_type.compositeSynthetic" resname="digital_source_type.compositeSynthetic">
+				<source>Composite including generative AI elements</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
