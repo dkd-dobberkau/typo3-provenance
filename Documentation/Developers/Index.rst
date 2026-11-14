@@ -182,6 +182,22 @@ submodule ``provenance_pages``. Sub-extensions add submodules with
     under the row's ``extra`` key; each becomes a column. Methods:
     ``getRow()``, ``setRow(array $row)``, ``getPageUid()``.
 
+The facts extension adds the submodule ``provenance_facts`` and two events:
+
+..  php:namespace:: CmsProvenance\ProvenanceFacts\Event
+
+..  php:class:: ModifyFactOverviewRowEvent
+
+    Dispatched for every row of the :guilabel:`Facts` overview. Add values
+    under the row's ``extra`` key; each becomes a column, for example a
+    Wikidata status. Methods: ``getRow()``, ``setRow(array $row)``.
+
+..  php:class:: BeforeFactOverviewRenderedEvent
+
+    Dispatched before the overview is rendered, with ``getView()`` (the
+    ``ModuleTemplate``), ``getPageId()`` and ``getRequest()``, for example to
+    add a doc header button such as "Suggest facts".
+
 ..  _developers-cli:
 
 Commands

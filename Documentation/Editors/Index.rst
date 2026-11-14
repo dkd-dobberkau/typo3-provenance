@@ -210,8 +210,14 @@ live version in the default language and changes nothing.
     example "Author "Ada" has no profile URI." Hidden pages and hidden
     records are marked. Click a page title to edit its properties.
 
-With the facts extension, the module also has :guilabel:`Facts`, see
-:ref:`editors-facts`.
+:guilabel:`Facts` (with the facts extension)
+    All facts on the selected pages: fact ID, quote, subject, predicate,
+    value, evidence, confidence, validity and page. Wikidata addresses are
+    shortened to their ID, such as ``Q636400``. Search by fact ID, quote,
+    subject, value or evidence, and filter by predicate or confidence.
+    Hidden facts, hidden elements and hidden pages are marked. The edit
+    button opens the content element the fact belongs to. How facts are made
+    is described in :ref:`editors-facts`.
 
 ..  _editors-checklist:
 
