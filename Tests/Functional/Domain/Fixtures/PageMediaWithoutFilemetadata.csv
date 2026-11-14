@@ -1,0 +1,40 @@
+"sys_file_storage"
+,"uid","pid","name","driver","configuration","is_default","is_browsable","is_public","is_writable","is_online"
+,1,0,"fileadmin","Local","<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes"" ?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""basePath""><value index=""vDEF"">fileadmin/</value></field><field index=""pathType""><value index=""vDEF"">relative</value></field><field index=""caseSensitive""><value index=""vDEF"">1</value></field></language></sheet></data></T3FlexForms>",1,1,1,1,1
+"pages"
+,"uid","pid","title","doktype"
+,1,0,"Root",1
+,2,1,"Empty",1
+"tt_content"
+,"uid","pid","colPos","sorting","sys_language_uid","hidden","CType","header"
+,10,1,0,256,0,0,"textmedia","Second in column 0"
+,11,1,0,128,0,0,"textmedia","First in column 0"
+,12,1,1,64,0,0,"textmedia","In column 1"
+,13,1,0,512,0,1,"textmedia","Hidden element"
+,14,1,0,1024,1,0,"textmedia","Translation"
+"sys_file"
+,"uid","pid","storage","type","identifier","identifier_hash","folder_hash","name","extension","mime_type","sha1","missing","tx_provenance_media_uri","tx_provenance_sha256","tx_provenance_sha256_of"
+,1,0,1,2,"/photo.jpg","0","0","photo.jpg","jpg","image/jpeg","aaa",0,"urn:uuid:00000000-0000-4000-8000-000000000001","1111111111111111111111111111111111111111111111111111111111111111","aaa"
+,2,0,1,4,"/clip.mp4","0","0","clip.mp4","mp4","video/mp4","bbb",0,"urn:uuid:00000000-0000-4000-8000-000000000002","2222222222222222222222222222222222222222222222222222222222222222","old"
+,3,0,1,5,"/manual.pdf","0","0","manual.pdf","pdf","application/pdf","ccc",0,"","",""
+,4,0,1,4,"/talk.youtube","0","0","talk.youtube","youtube","video/youtube","ddd",0,"","",""
+,5,0,1,2,"/hidden-ref.png","0","0","hidden-ref.png","png","image/png","eee",0,"","",""
+,6,0,1,2,"/in-hidden-element.png","0","0","in-hidden-element.png","png","image/png","fff",0,"","",""
+,7,0,1,3,"/song.mp3","0","0","song.mp3","mp3","audio/mpeg","ggg",0,"","",""
+"sys_file_metadata"
+,"uid","pid","file","sys_language_uid","l10n_parent","tx_provenance_license","tx_provenance_digital_source_type"
+,1,0,1,0,0,"https://creativecommons.org/licenses/by/4.0/","digitalCapture"
+,2,0,1,1,1,"",""
+,3,0,2,0,0,"",""
+,7,0,7,0,0,"",""
+"sys_file_reference"
+,"uid","pid","uid_local","uid_foreign","tablenames","fieldname","sorting_foreign","hidden"
+,1,1,2,10,"tt_content","assets",1,0
+,2,1,1,11,"tt_content","assets",1,0
+,3,1,1,10,"tt_content","assets",2,0
+,4,1,3,11,"tt_content","assets",2,0
+,5,1,4,11,"tt_content","assets",3,0
+,6,1,5,11,"tt_content","assets",4,1
+,7,1,6,13,"tt_content","assets",1,0
+,8,1,7,12,"tt_content","assets",1,0
+,9,1,1,14,"tt_content","assets",1,0

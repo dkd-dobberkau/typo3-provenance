@@ -36,6 +36,9 @@ services:
   CmsProvenance\Provenance\Domain\Repository\PublicPageRepository:
     public: true
 
+  CmsProvenance\Provenance\Domain\Repository\PageMediaRepository:
+    public: true
+
   # Public API for the media backfill and the sub-extensions
   CmsProvenance\Provenance\Media\MediaIdentity:
     public: true
