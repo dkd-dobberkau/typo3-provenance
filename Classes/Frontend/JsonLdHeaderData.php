@@ -7,11 +7,10 @@ namespace CmsProvenance\Provenance\Frontend;
 use CmsProvenance\Provenance\Domain\Repository\ProvenanceRecordRepository;
 use CmsProvenance\Provenance\Event\BeforeJsonLdEmittedEvent;
 use CmsProvenance\Provenance\Service\ConformanceLevel;
+use CmsProvenance\Provenance\Service\GeneratorName;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
-use TYPO3\CMS\Core\Information\Typo3Version;
-use TYPO3\CMS\Core\Package\PackageManager;
 use TYPO3\CMS\Frontend\Page\PageInformation;
 
 /**
@@ -24,9 +23,8 @@ final readonly class JsonLdHeaderData
         private ProvenanceRecordRepository $recordRepository,
         private JsonLdBuilder $jsonLdBuilder,
         private EventDispatcherInterface $eventDispatcher,
-        private PackageManager $packageManager,
-        private Typo3Version $typo3Version,
         private ConformanceLevel $conformanceLevel,
+        private GeneratorName $generatorName,
     ) {}
 
     // Required for userFunc callbacks since TYPO3 14; ignored by TYPO3 13.
@@ -48,7 +46,7 @@ final readonly class JsonLdHeaderData
             $record,
             (string)($page['title'] ?? ''),
             (int)($page['SYS_LASTCHANGED'] ?? 0),
-            $this->generator()
+            $this->generatorName->value()
         );
         $event = $this->eventDispatcher->dispatch(new BeforeJsonLdEmittedEvent($jsonLd, $record, $request));
         $jsonLd = $event->getJsonLd();
@@ -67,12 +65,5 @@ final readonly class JsonLdHeaderData
         );
 
         return '<script type="application/ld+json">' . $json . '</script>';
-    }
-
-    private function generator(): string
-    {
-        $extensionVersion = $this->packageManager->getPackage('provenance')->getPackageMetaData()->getVersion();
-
-        return sprintf('TYPO3 %s + provenance %s', $this->typo3Version->getVersion(), $extensionVersion);
     }
 }

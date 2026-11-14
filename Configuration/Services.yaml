@@ -26,6 +26,9 @@ services:
   CmsProvenance\Provenance\Backend\PageSubtree:
     public: true
 
+  CmsProvenance\Provenance\Backend\PageOverview:
+    public: true
+
   # Public API for the sub-extensions' well-known endpoints
   CmsProvenance\Provenance\Domain\Repository\PublicPageRepository:
     public: true

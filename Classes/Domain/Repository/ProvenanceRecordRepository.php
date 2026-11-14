@@ -37,14 +37,19 @@ final readonly class ProvenanceRecordRepository
         return $documentUid > 0 ? $this->findByUid($documentUid) : null;
     }
 
-    public function findByUid(int $documentUid): ?ProvenanceRecord
+    /**
+     * @param bool $includeHidden also hidden documents, for backend overviews; never for publication
+     */
+    public function findByUid(int $documentUid, bool $includeHidden = false): ?ProvenanceRecord
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tx_provenance_document');
-        $queryBuilder->getRestrictions()
+        $restrictions = $queryBuilder->getRestrictions()
             ->removeAll()
             ->add(GeneralUtility::makeInstance(DeletedRestriction::class))
-            ->add(GeneralUtility::makeInstance(HiddenRestriction::class))
             ->add(GeneralUtility::makeInstance(WorkspaceRestriction::class, 0));
+        if (!$includeHidden) {
+            $restrictions->add(GeneralUtility::makeInstance(HiddenRestriction::class));
+        }
         $row = $queryBuilder
             ->select('*')
             ->from('tx_provenance_document')
