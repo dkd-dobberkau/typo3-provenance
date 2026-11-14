@@ -22,6 +22,10 @@ services:
   CmsProvenance\Provenance\Command\BackfillCommand:
     public: true
 
+  # Public API for the overviews of the sub-extensions in the Provenance module
+  CmsProvenance\Provenance\Backend\PageSubtree:
+    public: true
+
   # Public API for the sub-extensions' well-known endpoints
   CmsProvenance\Provenance\Domain\Repository\PublicPageRepository:
     public: true
