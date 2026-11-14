@@ -33,6 +33,10 @@ services:
   CmsProvenance\Provenance\Domain\Repository\PublicPageRepository:
     public: true
 
+  # Public API for the media backfill and the sub-extensions
+  CmsProvenance\Provenance\Media\MediaIdentity:
+    public: true
+
   CmsProvenance\Provenance\WellKnown\WellKnownRouter:
     arguments:
       $handlers: !tagged_iterator provenance.well_known_handler
