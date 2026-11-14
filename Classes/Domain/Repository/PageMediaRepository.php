@@ -139,7 +139,9 @@ final readonly class PageMediaRepository
             ->from('sys_file_metadata')
             ->where(
                 $queryBuilder->expr()->in('file', $queryBuilder->createNamedParameter($fileUids, Connection::PARAM_INT_ARRAY)),
-                $queryBuilder->expr()->in('sys_language_uid', $queryBuilder->createNamedParameter(array_unique([0, $languageId]), Connection::PARAM_INT_ARRAY))
+                $queryBuilder->expr()->in('sys_language_uid', $queryBuilder->createNamedParameter(array_unique([0, $languageId]), Connection::PARAM_INT_ARRAY)),
+                // Live rows only: a draft in a workspace must not reach the signed live record.
+                $queryBuilder->expr()->eq('t3ver_wsid', $queryBuilder->createNamedParameter(0, Connection::PARAM_INT))
             )
             ->executeQuery()
             ->fetchAllAssociative();

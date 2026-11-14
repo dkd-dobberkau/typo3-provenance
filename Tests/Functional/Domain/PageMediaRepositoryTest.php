@@ -7,6 +7,7 @@ namespace CmsProvenance\Provenance\Tests\Functional\Domain;
 use CmsProvenance\Provenance\Domain\Model\MediaItem;
 use CmsProvenance\Provenance\Domain\Repository\PageMediaRepository;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 final class PageMediaRepositoryTest extends FunctionalTestCase
@@ -100,6 +101,21 @@ final class PageMediaRepositoryTest extends FunctionalTestCase
     public function pageWithoutMediaGivesEmptyList(): void
     {
         self::assertSame([], $this->find(2, 0));
+    }
+
+    #[Test]
+    public function workspaceDraftsOfMetadataAreIgnored(): void
+    {
+        $this->get(ConnectionPool::class)->getConnectionForTable('sys_file_metadata')->insert('sys_file_metadata', [
+            'uid' => 99, 'file' => 1, 'sys_language_uid' => 0, 't3ver_wsid' => 1, 't3ver_oid' => 1,
+            'creator' => 'Draft creator', 'tx_provenance_license' => 'https://example.org/draft-licence',
+        ]);
+
+        $photo = $this->find(1, 0)[0];
+
+        self::assertSame('Ada Lovelace', $photo->creator);
+        self::assertSame('https://creativecommons.org/licenses/by/4.0/', $photo->license);
+        self::assertSame(1, $photo->metadataUid);
     }
 
     /**

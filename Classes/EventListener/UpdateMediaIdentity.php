@@ -6,10 +6,12 @@ namespace CmsProvenance\Provenance\EventListener;
 
 use CmsProvenance\Provenance\Media\MediaCacheTags;
 use CmsProvenance\Provenance\Media\MediaIdentity;
+use CmsProvenance\Provenance\Media\MediaRefresh;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Resource\Event\AfterFileAddedToIndexEvent;
 use TYPO3\CMS\Core\Resource\Event\AfterFileUpdatedInIndexEvent;
 use TYPO3\CMS\Core\Resource\Event\BeforeFileDeletedEvent;
+use TYPO3\CMS\Core\Resource\File;
 
 /**
  * Keeps identifier and hash of media files current whenever FAL indexes a
@@ -21,18 +23,19 @@ final readonly class UpdateMediaIdentity
     public function __construct(
         private MediaIdentity $mediaIdentity,
         private MediaCacheTags $mediaCacheTags,
+        private MediaRefresh $mediaRefresh,
     ) {}
 
     #[AsEventListener(identifier: 'provenance/media-identity-added')]
     public function added(AfterFileAddedToIndexEvent $event): void
     {
-        $this->refresh($event->getFileUid());
+        $this->mediaRefresh->refresh($event->getFileUid());
     }
 
     #[AsEventListener(identifier: 'provenance/media-identity-updated')]
     public function updated(AfterFileUpdatedInIndexEvent $event): void
     {
-        $this->refresh($event->getFile()->getUid());
+        $this->mediaRefresh->refresh($event->getFile()->getUid());
     }
 
     // Before, not after: once deleted, the index row that names the
@@ -41,16 +44,12 @@ final readonly class UpdateMediaIdentity
     public function removed(BeforeFileDeletedEvent $event): void
     {
         $file = $event->getFile();
-        if (method_exists($file, 'getUid')) {
-            $this->mediaIdentity->retire((int)$file->getUid());
-            $this->mediaCacheTags->flush((int)$file->getUid());
+        // Processed files (thumbnails) fire this event too; their uid is a
+        // sys_file_processedfile uid and must not be read as a sys_file uid.
+        if ($file instanceof File) {
+            $this->mediaIdentity->retire($file->getUid());
+            $this->mediaCacheTags->flush($file->getUid());
         }
     }
 
-    private function refresh(int $fileUid): void
-    {
-        if ($this->mediaIdentity->update($fileUid)) {
-            $this->mediaCacheTags->flush($fileUid);
-        }
-    }
 }

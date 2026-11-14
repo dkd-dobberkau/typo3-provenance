@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 use TYPO3\CMS\Core\Context\Context;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\OnlineMedia\Helpers\OnlineMediaHelperRegistry;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 
@@ -137,18 +138,44 @@ final readonly class MediaIdentity
     private function hash(int $fileUid): ?string
     {
         try {
-            $path = $this->resourceFactory->getFileObject($fileUid)->getForLocalProcessing(false);
-            $hash = is_file($path) ? hash_file('sha256', $path) : false;
+            $file = $this->resourceFactory->getFileObject($fileUid);
+            // The LocalDriver hashes a missing file as empty instead of failing.
+            if (!$file->exists()) {
+                throw new \RuntimeException('the file does not exist in its storage', 1794700001);
+            }
+            $hash = $this->hashThroughDriver($file) ?? $this->hashLocalCopy($file);
         } catch (\Throwable $exception) {
-            $hash = false;
-            $this->logger->warning('Provenance: cannot read file ' . $fileUid . ': ' . $exception->getMessage());
-        }
-        if ($hash === false) {
-            $this->logger->warning('Provenance: no SHA-256 for file ' . $fileUid . ', its bytes cannot be read.');
-            return null;
+            $hash = null;
+            $this->logger->warning('Provenance: no SHA-256 for file ' . $fileUid . ': ' . $exception->getMessage());
         }
 
-        return $hash;
+        return $hash !== null && preg_match('/^[0-9a-f]{64}$/', $hash) === 1 ? $hash : null;
+    }
+
+    /**
+     * The driver streams the file (TYPO3 14 LocalDriver) or asks the remote
+     * storage, without a full download.
+     */
+    private function hashThroughDriver(File $file): ?string
+    {
+        try {
+            return $file->getStorage()->hashFile($file, 'sha256');
+        } catch (\InvalidArgumentException|\RuntimeException) {
+            // Drivers that only know sha1 and md5 (TYPO3 13 LocalDriver).
+            return null;
+        }
+    }
+
+    private function hashLocalCopy(File $file): ?string
+    {
+        $path = $file->getForLocalProcessing(false);
+        $hash = is_file($path) ? hash_file('sha256', $path) : false;
+        // Only non-local drivers hand out a temporary copy.
+        if ($file->getStorage()->getDriverType() !== 'Local' && is_file($path)) {
+            unlink($path);
+        }
+
+        return $hash === false ? null : $hash;
     }
 
     private function closeHistory(string $mediaUri): void

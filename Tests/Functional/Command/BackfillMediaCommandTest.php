@@ -8,12 +8,21 @@ use CmsProvenance\Provenance\Command\BackfillMediaCommand;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Component\Console\Tester\CommandTester;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Cache\Backend\Typo3DatabaseBackend;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 final class BackfillMediaCommandTest extends FunctionalTestCase
 {
     protected array $testExtensionsToLoad = ['cms-provenance/provenance'];
+
+    // The testing framework disables the page cache; the flush test needs a real one.
+    protected array $configurationToUseInTestInstance = [
+        'SYS' => ['caching' => ['cacheConfigurations' => ['pages' => [
+            'backend' => Typo3DatabaseBackend::class,
+        ]]]],
+    ];
 
     protected function setUp(): void
     {
@@ -38,6 +47,17 @@ final class BackfillMediaCommandTest extends FunctionalTestCase
         self::assertSame(hash('sha256', 'photo.jpg'), BackendUtility::getRecord('sys_file', 1)['tx_provenance_sha256']);
         self::assertSame(hash('sha256', 'logo.png'), BackendUtility::getRecord('sys_file', 4)['tx_provenance_sha256']);
         self::assertSame('', BackendUtility::getRecord('sys_file', 2)['tx_provenance_media_uri']);
+    }
+
+    #[Test]
+    public function pagesListingABackfilledFileAreFlushed(): void
+    {
+        $cache = $this->get(CacheManager::class)->getCache('pages');
+        $cache->set('page-with-photo', 'html', ['sys_file_1']);
+
+        $this->runBackfill([]);
+
+        self::assertFalse($cache->has('page-with-photo'));
     }
 
     #[Test]

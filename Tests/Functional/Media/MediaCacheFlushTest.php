@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CmsProvenance\Provenance\Tests\Functional\Media;
 
 use PHPUnit\Framework\Attributes\Test;
+use CmsProvenance\Provenance\Hook\FlushMediaPages;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -51,6 +52,23 @@ final class MediaCacheFlushTest extends FunctionalTestCase
 
         self::assertFalse($cache->has('page-with-file-1'));
         self::assertTrue($cache->has('page-with-file-2'));
+    }
+
+    #[Test]
+    public function publishingMetadataFromAWorkspaceFlushesTaggedPages(): void
+    {
+        $cache = $this->pageCache();
+        $cache->set('page-with-file-1', 'html', ['sys_file_1']);
+
+        $this->get(FlushMediaPages::class)->processCmdmap_postProcess(
+            'version',
+            'sys_file_metadata',
+            1,
+            ['action' => 'publish', 'swapWith' => 2],
+            GeneralUtility::makeInstance(DataHandler::class)
+        );
+
+        self::assertFalse($cache->has('page-with-file-1'));
     }
 
     #[Test]

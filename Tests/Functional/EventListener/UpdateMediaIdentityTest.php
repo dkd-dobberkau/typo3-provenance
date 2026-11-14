@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace CmsProvenance\Provenance\Tests\Functional\EventListener;
 
 use PHPUnit\Framework\Attributes\Test;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Resource\Event\BeforeFileDeletedEvent;
+use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
 use TYPO3\CMS\Core\Resource\StorageRepository;
@@ -61,6 +64,18 @@ final class UpdateMediaIdentityTest extends FunctionalTestCase
         $this->storage()->deleteFile($file);
 
         self::assertNotNull($this->history()[0]['valid_until']);
+    }
+
+    #[Test]
+    public function deletingAProcessedFileLeavesOtherHistoriesOpen(): void
+    {
+        $file = $this->addFile('new.gif', self::GIF_WHITE);
+        // A thumbnail whose sys_file_processedfile uid equals the uid of a media file.
+        $thumbnail = new ProcessedFile($file, ProcessedFile::CONTEXT_IMAGEPREVIEW, [], ['uid' => $file->getUid(), 'identifier' => '/_processed_/t.gif', 'name' => 't.gif', 'storage' => 1, 'originalfilesha1' => $file->getSha1(), 'task_type' => ProcessedFile::CONTEXT_IMAGEPREVIEW, 'configuration' => '']);
+
+        $this->get(EventDispatcherInterface::class)->dispatch(new BeforeFileDeletedEvent($thumbnail));
+
+        self::assertNull($this->history()[0]['valid_until']);
     }
 
     private function addFile(string $name, string $content): File

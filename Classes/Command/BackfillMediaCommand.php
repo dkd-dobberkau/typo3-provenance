@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CmsProvenance\Provenance\Command;
 
 use CmsProvenance\Provenance\Media\MediaIdentity;
+use CmsProvenance\Provenance\Media\MediaRefresh;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,6 +29,7 @@ final class BackfillMediaCommand extends Command
     public function __construct(
         private readonly ConnectionPool $connectionPool,
         private readonly MediaIdentity $mediaIdentity,
+        private readonly MediaRefresh $mediaRefresh,
     ) {
         parent::__construct();
     }
@@ -47,10 +49,14 @@ final class BackfillMediaCommand extends Command
             return Command::SUCCESS;
         }
 
+        $updated = 0;
         foreach ($files as $file) {
-            $this->mediaIdentity->update((int)$file['uid']);
+            $updated += $this->mediaRefresh->refresh((int)$file['uid']) ? 1 : 0;
         }
-        $io->success(sprintf('Updated %d media files.', count($files)));
+        $io->success(sprintf('Updated %d media files.', $updated));
+        if ($updated < count($files)) {
+            $io->warning(sprintf('%d media files could not be read; see the log.', count($files) - $updated));
+        }
         return Command::SUCCESS;
     }
 
