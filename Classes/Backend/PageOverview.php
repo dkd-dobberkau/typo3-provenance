@@ -14,6 +14,7 @@ use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
+use TYPO3\CMS\Core\Type\Bitmask\Permission;
 
 /**
  * Rows of the "Pages" overview: per standard page of a subtree, whether it
@@ -36,7 +37,7 @@ final readonly class PageOverview
     ) {}
 
     /**
-     * @return list<array{uid: int, title: string, pageHidden: bool, hasRecord: bool, recordHidden: bool, level: ?int, missing: list<string>, datePublished: ?string, lastSubstantiveRevision: ?string, maintainedDate: ?string, extra: array<string, string>}>
+     * @return list<array{uid: int, title: string, pageHidden: bool, hasRecord: bool, recordHidden: bool, level: ?int, missing: list<string>, datePublished: ?string, lastSubstantiveRevision: ?string, maintainedDate: ?string, mayEdit: bool, extra: array<string, mixed>}>
      */
     public function rows(int $rootUid, int $depth, BackendUserAuthentication $user): array
     {
@@ -44,6 +45,7 @@ final readonly class PageOverview
         $pages = $this->pages($pageIds);
         $hiddenDocuments = $this->hiddenDocuments(array_filter(array_column($pages, 'provenance_document_uid')));
         $generator = $this->generatorName->value();
+        $mayModifyPages = $user->check('tables_modify', 'pages');
 
         $rows = [];
         foreach ($pageIds as $pageId) {
@@ -68,6 +70,7 @@ final readonly class PageOverview
                 'datePublished' => $jsonLd['datePublished'] ?? null,
                 'lastSubstantiveRevision' => $jsonLd['lastSubstantiveRevision'] ?? null,
                 'maintainedDate' => $jsonLd['maintainedDate'] ?? null,
+                'mayEdit' => $mayModifyPages && $user->doesUserHaveAccess($page, Permission::PAGE_EDIT),
                 'extra' => [],
             ];
             $rows[] = $this->eventDispatcher->dispatch(new ModifyPageOverviewRowEvent($row, $pageId))->getRow();
@@ -88,7 +91,8 @@ final readonly class PageOverview
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
         $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
         $rows = $queryBuilder
-            ->select('uid', 'title', 'hidden', 'doktype', 'provenance_document_uid', 'SYS_LASTCHANGED')
+            // perms_* for the edit permission, so it needs no second query per page.
+            ->select('uid', 'pid', 'title', 'hidden', 'doktype', 'provenance_document_uid', 'SYS_LASTCHANGED', 'perms_userid', 'perms_groupid', 'perms_user', 'perms_group', 'perms_everybody')
             ->from('pages')
             ->where($queryBuilder->expr()->in('uid', $queryBuilder->createNamedParameter($pageIds, Connection::PARAM_INT_ARRAY)))
             ->executeQuery()

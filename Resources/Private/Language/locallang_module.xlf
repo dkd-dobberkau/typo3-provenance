@@ -14,6 +14,7 @@
             <trans-unit id="workspaceNotice"><source>You are working in a workspace. This overview shows the live version and the default language only.</source></trans-unit>
             <trans-unit id="liveNotice"><source>Live version, default language.</source></trans-unit>
             <trans-unit id="pages.levelNotice"><source>Levels are those of the stored record without a signature: L1 or L2. L3 and L4 depend on signing and the audit endpoint; check them in the page source or with the conformance tools. Extensions may still change what a page publishes.</source></trans-unit>
+            <trans-unit id="pages.noAccess"><source>You may not view pages.</source></trans-unit>
             <trans-unit id="pages.empty"><source>No standard pages here.</source></trans-unit>
             <trans-unit id="pages.column.page"><source>Page</source></trans-unit>
             <trans-unit id="pages.column.level"><source>Level</source></trans-unit>

@@ -13,7 +13,10 @@
     <f:variable name="ll" value="LLL:EXT:provenance/Resources/Private/Language/locallang_module.xlf:"/>
     <h1><f:translate key="LLL:EXT:provenance/Resources/Private/Language/locallang_mod_pages.xlf:mlang_labels_tablabel"/></h1>
 
-    <f:if condition="{pageSelected}">
+    <f:if condition="{pageSelected} && !{mayView}">
+        <f:be.infobox state="2"><f:translate key="{ll}pages.noAccess"/></f:be.infobox>
+    </f:if>
+    <f:if condition="{pageSelected} && {mayView}">
         <f:then>
             <f:render partial="Overview/Depth" arguments="{moduleUrl: moduleUrl, pageId: pageId, depth: depth, depths: depths}"/>
             <f:render partial="Overview/LiveNotice" arguments="{inWorkspace: inWorkspace}"/>
@@ -31,7 +34,7 @@
                                     <th><f:translate key="{ll}pages.column.published"/></th>
                                     <th><f:translate key="{ll}pages.column.revised"/></th>
                                     <th><f:translate key="{ll}pages.column.confirmed"/></th>
-                                    <f:for each="{rows.0.extra}" key="name" as="value"><th>{name}</th></f:for>
+                                    <f:for each="{extraColumns}" as="column"><th>{column}</th></f:for>
                                 </tr>
                             </thead>
                             <tbody>
@@ -60,7 +63,7 @@
                                         <td><f:render partial="Overview/Date" arguments="{date: row.datePublished}"/></td>
                                         <td><f:render partial="Overview/Date" arguments="{date: row.lastSubstantiveRevision}"/></td>
                                         <td><f:render partial="Overview/Date" arguments="{date: row.maintainedDate}"/></td>
-                                        <f:for each="{row.extra}" as="value"><td>{value}</td></f:for>
+                                        <f:for each="{row.extra}" as="cell"><td><f:render partial="Overview/ExtraCell" arguments="{cell: cell}"/></td></f:for>
                                     </tr>
                                 </f:for>
                             </tbody>
@@ -73,7 +76,7 @@
             </f:if>
         </f:then>
         <f:else>
-            <f:be.infobox state="-1"><f:translate key="{ll}selectPage"/></f:be.infobox>
+            <f:if condition="!{pageSelected}"><f:be.infobox state="-1"><f:translate key="{ll}selectPage"/></f:be.infobox></f:if>
         </f:else>
     </f:if>
 </f:section>

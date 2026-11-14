@@ -1,0 +1,6 @@
+"be_groups"
+,"uid","pid","title","tables_select","tables_modify","groupMods"
+,1,0,"No pages","tt_content","","provenance,provenance_pages"
+"be_users"
+,"uid","pid","username","admin","usergroup","db_mountpoints","options"
+,3,0,"no-pages",0,"1","1",3

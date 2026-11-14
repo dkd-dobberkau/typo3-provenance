@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace CmsProvenance\Provenance\Tests\Functional\Backend;
 
 use CmsProvenance\Provenance\Backend\Controller\PagesModuleController;
+use CmsProvenance\Provenance\Event\ModifyPageOverviewRowEvent;
 use PHPUnit\Framework\Attributes\Test;
 use TYPO3\CMS\Backend\Module\ModuleData;
 use TYPO3\CMS\Backend\Module\ModuleProvider;
 use TYPO3\CMS\Backend\Routing\Route;
 use TYPO3\CMS\Core\Core\SystemEnvironmentBuilder;
+use TYPO3\CMS\Core\EventDispatcher\ListenerProvider;
 use TYPO3\CMS\Core\Http\NormalizedParams;
 use TYPO3\CMS\Core\Http\ServerRequest;
 use TYPO3\CMS\Core\Localization\LanguageServiceFactory;
@@ -23,8 +25,8 @@ final class PagesModuleControllerTest extends FunctionalTestCase
     {
         parent::setUp();
         $this->importCSVDataSet(__DIR__ . '/Fixtures/PageOverview.csv');
-        $backendUser = $this->setUpBackendUser(1);
-        $GLOBALS['LANG'] = $this->get(LanguageServiceFactory::class)->createFromUserPreferences($backendUser);
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/PagesModuleEditors.csv');
+        $this->logIn(1);
     }
 
     #[Test]
@@ -41,6 +43,42 @@ final class PagesModuleControllerTest extends FunctionalTestCase
     public function withoutAPageItAsksForOne(): void
     {
         self::assertStringContainsString('Select a page in the page tree.', $this->render([]));
+    }
+
+    #[Test]
+    public function userWithoutAccessToPagesSeesNone(): void
+    {
+        $this->logIn(3);
+        $body = $this->render(['id' => 1, 'depth' => 1]);
+
+        self::assertStringContainsString('You may not view pages.', $body);
+        self::assertStringNotContainsString('Incomplete', $body);
+        self::assertStringNotContainsString('Select a page', $body);
+    }
+
+    #[Test]
+    public function listenersCanAddLinkColumns(): void
+    {
+        $this->getContainer()->set('provenance.test.link-listener', new class () {
+            public function __invoke(ModifyPageOverviewRowEvent $event): void
+            {
+                $row = $event->getRow();
+                $row['extra']['Action'] = ['label' => 'Check', 'url' => '/typo3/check?id=' . $event->getPageUid()];
+                $event->setRow($row);
+            }
+        });
+        $this->get(ListenerProvider::class)->addListener(ModifyPageOverviewRowEvent::class, 'provenance.test.link-listener');
+
+        $body = $this->render(['id' => 1, 'depth' => 1]);
+
+        self::assertStringContainsString('<th>Action</th>', $body);
+        self::assertStringContainsString('href="/typo3/check?id=2"', $body);
+    }
+
+    private function logIn(int $userUid): void
+    {
+        $backendUser = $this->setUpBackendUser($userUid);
+        $GLOBALS['LANG'] = $this->get(LanguageServiceFactory::class)->createFromUserPreferences($backendUser);
     }
 
     /**

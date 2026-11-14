@@ -32,6 +32,7 @@ final class PageOverviewTest extends FunctionalTestCase
         self::assertSame([], $row['missing']);
         self::assertSame('2026-05-14T09:00:00Z', $row['datePublished']);
         self::assertSame('2026-11-01T08:00:00Z', $row['maintainedDate']);
+        self::assertTrue($row['mayEdit']);
     }
 
     #[Test]

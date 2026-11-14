@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CmsProvenance\Provenance\Backend\Controller;
 
+use CmsProvenance\Provenance\Backend\ExtraColumns;
 use CmsProvenance\Provenance\Backend\PageOverview;
 use CmsProvenance\Provenance\Backend\PageSubtree;
 use Psr\Http\Message\ResponseInterface;
@@ -40,6 +41,9 @@ final readonly class PagesModuleController
         // For admins, page 0 reads as the root level; the overview needs a real page.
         $pageRecord = $pageId > 0 ? (BackendUtility::readPageAccess($pageId, $user->getPagePermsClause(Permission::PAGE_SHOW)) ?: []) : [];
 
+        $mayView = $user->check('tables_select', 'pages');
+        $overview = ExtraColumns::normalize($pageRecord !== [] && $mayView ? $this->withEditLinks($this->pageOverview->rows($pageId, $depth, $user), $request) : []);
+
         $view = $this->moduleTemplateFactory->create($request);
         $view->setTitle($GLOBALS['LANG']->sL($module->getTitle()), (string)($pageRecord['title'] ?? ''));
         $view->makeDocHeaderModuleMenu(['id' => $pageId]);
@@ -47,10 +51,12 @@ final readonly class PagesModuleController
         $view->assignMultiple([
             'pageId' => $pageId,
             'pageSelected' => $pageRecord !== [],
+            'mayView' => $mayView,
             'depth' => $depth,
             'depths' => self::DEPTHS,
             'inWorkspace' => $user->workspace !== 0,
-            'rows' => $pageRecord !== [] ? $this->withEditLinks($this->pageOverview->rows($pageId, $depth, $user), $user, $request) : [],
+            'rows' => $overview['rows'],
+            'extraColumns' => $overview['columns'],
             'moduleUrl' => (string)$this->uriBuilder->buildUriFromRoute($module->getIdentifier()),
         ]);
 
@@ -95,12 +101,11 @@ final readonly class PagesModuleController
      * @param list<array<string, mixed>> $rows
      * @return list<array<string, mixed>>
      */
-    private function withEditLinks(array $rows, BackendUserAuthentication $user, ServerRequestInterface $request): array
+    private function withEditLinks(array $rows, ServerRequestInterface $request): array
     {
         $returnUrl = (string)$request->getUri();
         foreach ($rows as &$row) {
-            $page = BackendUtility::getRecord('pages', $row['uid']) ?? [];
-            $row['editUrl'] = $user->check('tables_modify', 'pages') && $user->doesUserHaveAccess($page, Permission::PAGE_EDIT)
+            $row['editUrl'] = $row['mayEdit']
                 ? (string)$this->uriBuilder->buildUriFromRoute('record_edit', ['edit' => ['pages' => [$row['uid'] => 'edit']], 'returnUrl' => $returnUrl])
                 : '';
         }
