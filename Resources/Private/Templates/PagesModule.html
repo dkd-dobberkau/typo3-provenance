@@ -1,0 +1,81 @@
+<html
+    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    data-namespace-typo3-fluid="true"
+>
+
+<f:layout name="Module"/>
+
+<f:section name="Before">
+    <f:asset.module identifier="@typo3/backend/global-event-handler.js"/>
+</f:section>
+
+<f:section name="Content">
+    <f:variable name="ll" value="LLL:EXT:provenance/Resources/Private/Language/locallang_module.xlf:"/>
+    <h1><f:translate key="LLL:EXT:provenance/Resources/Private/Language/locallang_mod_pages.xlf:mlang_labels_tablabel"/></h1>
+
+    <f:if condition="{pageSelected}">
+        <f:then>
+            <f:render partial="Overview/Depth" arguments="{moduleUrl: moduleUrl, pageId: pageId, depth: depth, depths: depths}"/>
+            <f:render partial="Overview/LiveNotice" arguments="{inWorkspace: inWorkspace}"/>
+            <p class="text-body-secondary"><f:translate key="{ll}pages.levelNotice"/></p>
+
+            <f:if condition="{rows}">
+                <f:then>
+                    <div class="table-fit">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th><f:translate key="{ll}pages.column.page"/></th>
+                                    <th><f:translate key="{ll}pages.column.level"/></th>
+                                    <th><f:translate key="{ll}pages.column.missing"/></th>
+                                    <th><f:translate key="{ll}pages.column.published"/></th>
+                                    <th><f:translate key="{ll}pages.column.revised"/></th>
+                                    <th><f:translate key="{ll}pages.column.confirmed"/></th>
+                                    <f:for each="{rows.0.extra}" key="name" as="value"><th>{name}</th></f:for>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <f:for each="{rows}" as="row">
+                                    <tr>
+                                        <td>
+                                            <f:if condition="{row.editUrl}">
+                                                <f:then><a href="{row.editUrl}">{row.title}</a></f:then>
+                                                <f:else>{row.title}</f:else>
+                                            </f:if>
+                                            <f:if condition="{row.pageHidden}"> <span class="badge badge-warning"><f:translate key="{ll}badge.pageHidden"/></span></f:if>
+                                            <f:if condition="{row.recordHidden}"> <span class="badge badge-warning"><f:translate key="{ll}badge.recordHidden"/></span></f:if>
+                                        </td>
+                                        <td>
+                                            <f:if condition="{row.hasRecord}">
+                                                <f:then><span class="badge {f:if(condition: '{row.level} == 2', then: 'badge-success', else: 'badge-danger')}">L{row.level}</span></f:then>
+                                                <f:else><span class="badge badge-default"><f:translate key="{ll}pages.noRecord"/></span></f:else>
+                                            </f:if>
+                                        </td>
+                                        <td>
+                                            <f:if condition="{row.missing}">
+                                                <f:then><ul class="mb-0 ps-3"><f:for each="{row.missing}" as="reason"><li>{reason}</li></f:for></ul></f:then>
+                                                <f:else><f:if condition="{row.hasRecord}"><f:translate key="{ll}pages.complete"/></f:if></f:else>
+                                            </f:if>
+                                        </td>
+                                        <td><f:render partial="Overview/Date" arguments="{date: row.datePublished}"/></td>
+                                        <td><f:render partial="Overview/Date" arguments="{date: row.lastSubstantiveRevision}"/></td>
+                                        <td><f:render partial="Overview/Date" arguments="{date: row.maintainedDate}"/></td>
+                                        <f:for each="{row.extra}" as="value"><td>{value}</td></f:for>
+                                    </tr>
+                                </f:for>
+                            </tbody>
+                        </table>
+                    </div>
+                </f:then>
+                <f:else>
+                    <f:be.infobox state="-1"><f:translate key="{ll}pages.empty"/></f:be.infobox>
+                </f:else>
+            </f:if>
+        </f:then>
+        <f:else>
+            <f:be.infobox state="-1"><f:translate key="{ll}selectPage"/></f:be.infobox>
+        </f:else>
+    </f:if>
+</f:section>
+
+</html>

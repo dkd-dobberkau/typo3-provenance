@@ -13,7 +13,9 @@ These are known and tracked; they do not make a site non-conformant.
     :guilabel:`Last substantive revision` and :guilabel:`Last confirmed as
     accurate` by hand; the split save button described in the product
     requirements is not built yet.
-*   **No conformance badge in the page tree.**
+*   **No conformance badge in the page tree.** The module
+    :ref:`Provenance <editors-module>` lists the levels of a subtree instead.
+    It shows L1 and L2 only; signed levels are not shown there yet.
 *   **Facts mark quotes, not markup.** The :guilabel:`Fact` button creates a
     fact from the selected words; the text is not changed. A quote across
     formatting or a link is not anchored on the page.

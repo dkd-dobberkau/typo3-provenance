@@ -1,0 +1,15 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<form action="{moduleUrl}" method="get" class="row row-cols-auto g-2 align-items-center mb-3">
+    <input type="hidden" name="id" value="{pageId}"/>
+    <div class="col">
+        <label class="form-label mb-0" for="provenance-depth"><f:translate key="LLL:EXT:provenance/Resources/Private/Language/locallang_module.xlf:depth"/></label>
+    </div>
+    <div class="col">
+        <select id="provenance-depth" name="depth" class="form-select" data-global-event="change" data-action-submit="$form">
+            <f:for each="{depths}" as="option">
+                <option value="{option}" {f:if(condition: '{option} == {depth}', then: 'selected="selected"')}><f:translate key="LLL:EXT:provenance/Resources/Private/Language/locallang_module.xlf:depth.{option}"/></option>
+            </f:for>
+        </select>
+    </div>
+</form>
+</html>

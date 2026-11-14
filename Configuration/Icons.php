@@ -9,6 +9,10 @@ return [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:provenance/Resources/Public/Icons/document.svg',
     ],
+    'module-provenance' => [
+        'provider' => SvgIconProvider::class,
+        'source' => 'EXT:provenance/Resources/Public/Icons/module-provenance.svg',
+    ],
     'provenance-source' => [
         'provider' => SvgIconProvider::class,
         'source' => 'EXT:provenance/Resources/Public/Icons/source.svg',

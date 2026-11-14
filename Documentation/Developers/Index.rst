@@ -152,6 +152,36 @@ A lookup that fails to load is skipped with a console warning. Lookups must
 not call external services from the browser; route requests through a
 backend AJAX route, as ``provenance_wikidata`` does.
 
+..  _developers-module:
+
+The Provenance module
+=====================
+
+The core registers the backend module ``provenance`` (parent ``web``) and its
+submodule ``provenance_pages``. Sub-extensions add submodules with
+``'parent' => 'provenance'`` in their ``Configuration/Backend/Modules.php``.
+
+..  php:namespace:: CmsProvenance\Provenance\Backend
+
+..  php:class:: PageSubtree
+
+    Public service: the pages of a subtree a backend user may see, live and
+    in the default language, hidden pages included, in page tree order.
+
+    ..  php:method:: pageIds(int $rootUid, int $depth, TYPO3\\CMS\\Core\\Authentication\\BackendUserAuthentication $user)
+
+        :returntype: list<int>
+
+        ``PageSubtree::ALL`` (999) as depth means all levels.
+
+..  php:namespace:: CmsProvenance\Provenance\Event
+
+..  php:class:: ModifyPageOverviewRowEvent
+
+    Dispatched for every row of the :guilabel:`Pages` overview. Add values
+    under the row's ``extra`` key; each becomes a column. Methods:
+    ``getRow()``, ``setRow(array $row)``, ``getPageUid()``.
+
 ..  _developers-cli:
 
 Commands

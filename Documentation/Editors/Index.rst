@@ -194,6 +194,25 @@ in every language, which makes the fact easier to check later. If Wikidata is
 not reachable, the dialog says so and you fill in the fields by hand as
 before.
 
+..  _editors-module:
+
+The Provenance module
+=====================
+
+The module :guilabel:`Content > Provenance` (:guilabel:`Web > Provenance` in
+TYPO3 13) gives an overview of the page you select in the page tree and the
+pages below it. Choose how many levels with :guilabel:`Levels`. It shows the
+live version in the default language and changes nothing.
+
+:guilabel:`Pages`
+    For each page: whether it has a provenance record, the level the record
+    reaches without a signature (L1 or L2) and, for L1, what is missing, for
+    example "Author "Ada" has no profile URI." Hidden pages and hidden
+    records are marked. Click a page title to edit its properties.
+
+With the facts extension, the module also has :guilabel:`Facts`, see
+:ref:`editors-facts`.
+
 ..  _editors-checklist:
 
 Checklist before publishing

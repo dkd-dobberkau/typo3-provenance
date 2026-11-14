@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Backend module "Provenance" with the submodule "Pages": per page of a
+  subtree, whether it has a record, its level without a signature and what
+  is missing. Sub-extensions add submodules; `PageSubtree` and
+  `ModifyPageOverviewRowEvent` are their API. `ConformanceLevel::missing()`
+  explains why a record stays at L1.
+
 - Site set `cms-provenance/provenance-mx` (optional): the record of each page
   as MX meta tags (`<meta name="mx:…">`, Machine Experience drafts of The
   Gathering), with the site setting `provenance.mx.trainingDataPolicy`.

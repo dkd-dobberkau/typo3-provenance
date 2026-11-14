@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="EXT:provenance/Resources/Private/Language/locallang_module.xlf" date="2026-11-14T00:00:00Z" product-name="provenance">
+        <header/>
+        <body>
+            <trans-unit id="selectPage"><source>Select a page in the page tree.</source></trans-unit>
+            <trans-unit id="depth"><source>Levels</source></trans-unit>
+            <trans-unit id="depth.0"><source>This page</source></trans-unit>
+            <trans-unit id="depth.1"><source>1 level below</source></trans-unit>
+            <trans-unit id="depth.2"><source>2 levels below</source></trans-unit>
+            <trans-unit id="depth.3"><source>3 levels below</source></trans-unit>
+            <trans-unit id="depth.4"><source>4 levels below</source></trans-unit>
+            <trans-unit id="depth.999"><source>All levels</source></trans-unit>
+            <trans-unit id="workspaceNotice"><source>You are working in a workspace. This overview shows the live version and the default language only.</source></trans-unit>
+            <trans-unit id="liveNotice"><source>Live version, default language.</source></trans-unit>
+            <trans-unit id="pages.levelNotice"><source>Levels are those of the stored record without a signature: L1 or L2. L3 and L4 depend on signing and the audit endpoint; check them in the page source or with the conformance tools. Extensions may still change what a page publishes.</source></trans-unit>
+            <trans-unit id="pages.empty"><source>No standard pages here.</source></trans-unit>
+            <trans-unit id="pages.column.page"><source>Page</source></trans-unit>
+            <trans-unit id="pages.column.level"><source>Level</source></trans-unit>
+            <trans-unit id="pages.column.missing"><source>Missing for the next level</source></trans-unit>
+            <trans-unit id="pages.column.published"><source>First published</source></trans-unit>
+            <trans-unit id="pages.column.revised"><source>Last substantive revision</source></trans-unit>
+            <trans-unit id="pages.column.confirmed"><source>Confirmed as still accurate</source></trans-unit>
+            <trans-unit id="pages.noRecord"><source>No record</source></trans-unit>
+            <trans-unit id="pages.complete"><source>Complete; a signature raises it to L3.</source></trans-unit>
+            <trans-unit id="badge.pageHidden"><source>Page hidden</source></trans-unit>
+            <trans-unit id="badge.recordHidden"><source>Record hidden</source></trans-unit>
+        </body>
+    </file>
+</xliff>
