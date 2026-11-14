@@ -17,8 +17,9 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 
 /**
  * Assigns identifiers and hashes to media files indexed before the extension
- * was installed, and rehashes files whose bytes changed without an index
- * event (for example files replaced over FTP).
+ * was installed, and retries files whose hash could not be computed. Bytes
+ * changed outside TYPO3 are detected by the FAL indexer (sys_file.sha1), not
+ * by this command.
  */
 #[AsCommand(
     name: 'provenance:backfill-media',

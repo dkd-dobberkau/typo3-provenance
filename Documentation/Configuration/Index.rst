@@ -135,8 +135,12 @@ copyright and source; without it only licence and digital source type are
 available.
 
 Every media file gets a stable identifier and a SHA-256 of its bytes when it is
-uploaded or replaced. For files that existed before the extension was
-installed, or that were changed outside TYPO3, run:
+uploaded or replaced, and whenever the FAL indexer finds that its bytes changed.
+Files changed outside TYPO3, for example over FTP, are only noticed by the
+indexer: keep the scheduler task :guilabel:`File Abstraction Layer: Update
+storage index` running, or the record keeps the old hash. For files that
+existed before the extension was installed, or whose hash could not be computed
+earlier, run:
 
 ..  code-block:: bash
 

@@ -16,8 +16,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
 use TYPO3\CMS\Core\Cache\CacheDataCollector;
 use TYPO3\CMS\Core\Cache\CacheTag;
+use TYPO3\CMS\Core\Context\Context;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Http\Uri;
-use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Frontend\Page\PageInformation;
 
 /**
@@ -36,6 +37,7 @@ final readonly class JsonLdHeaderData
         private MediaJsonLdBuilder $mediaJsonLdBuilder,
         private MediaCacheTags $mediaCacheTags,
         private AbsoluteUrlResolver $urlResolver,
+        private Context $context,
     ) {}
 
     // Required for userFunc callbacks since TYPO3 14; ignored by TYPO3 13.
@@ -88,8 +90,12 @@ final readonly class JsonLdHeaderData
      */
     private function media(int $pageUid, ServerRequestInterface $request): array
     {
-        $language = $request->getAttribute('language');
-        $items = $this->pageMediaRepository->findByPage($pageUid, $language instanceof SiteLanguage ? $language->getLanguageId() : 0);
+        // Content language and overlay mode as the frontend renders the page,
+        // including fallbacks to another language.
+        $languageAspect = $this->context->getAspect('language');
+        $items = $languageAspect instanceof LanguageAspect
+            ? $this->pageMediaRepository->findByPage($pageUid, $languageAspect->getContentId(), $languageAspect->getOverlayType())
+            : $this->pageMediaRepository->findByPage($pageUid, 0);
         $cacheCollector = $request->getAttribute('frontend.cache.collector');
         if ($cacheCollector instanceof CacheDataCollector) {
             foreach ($items as $item) {

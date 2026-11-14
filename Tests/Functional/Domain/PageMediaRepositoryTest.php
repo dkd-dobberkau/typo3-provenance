@@ -7,6 +7,7 @@ namespace CmsProvenance\Provenance\Tests\Functional\Domain;
 use CmsProvenance\Provenance\Domain\Model\MediaItem;
 use CmsProvenance\Provenance\Domain\Repository\PageMediaRepository;
 use PHPUnit\Framework\Attributes\Test;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
@@ -116,6 +117,58 @@ final class PageMediaRepositoryTest extends FunctionalTestCase
         self::assertSame('Ada Lovelace', $photo->creator);
         self::assertSame('https://creativecommons.org/licenses/by/4.0/', $photo->license);
         self::assertSame(1, $photo->metadataUid);
+    }
+
+    #[Test]
+    public function referencesInFieldsTheContentTypeDoesNotShowAreSkipped(): void
+    {
+        $connection = $this->get(ConnectionPool::class);
+        // Switched from textmedia to text: the old asset reference stays in the database.
+        $connection->getConnectionForTable('tt_content')->insert('tt_content', ['uid' => 20, 'pid' => 1, 'colPos' => 2, 'sorting' => 1, 'CType' => 'text']);
+        $connection->getConnectionForTable('sys_file_reference')->insert('sys_file_reference', ['uid' => 20, 'pid' => 1, 'uid_local' => 5, 'uid_foreign' => 20, 'tablenames' => 'tt_content', 'fieldname' => 'assets']);
+        // A textmedia element shows "assets", not "image".
+        $connection->getConnectionForTable('sys_file_reference')->insert('sys_file_reference', ['uid' => 21, 'pid' => 1, 'uid_local' => 6, 'uid_foreign' => 12, 'tablenames' => 'tt_content', 'fieldname' => 'image']);
+
+        $names = array_map(static fn(MediaItem $item): string => $item->name, $this->find(1, 0));
+
+        self::assertSame(['photo.jpg', 'clip.mp4', 'song.mp3'], $names);
+    }
+
+    #[Test]
+    public function connectedTranslationsFallBackToDefaultElementsInMixedMode(): void
+    {
+        $this->addTranslationOfElement11WithSong();
+
+        // 11 is shown as its translation (song), 10 and 12 untranslated from the default language.
+        self::assertSame(['song.mp3', 'clip.mp4', 'photo.jpg'], $this->names(1, 1, LanguageAspect::OVERLAYS_MIXED));
+    }
+
+    #[Test]
+    public function hiddenUntranslatedElementsAreLeftOutWhenOverlaysAreStrict(): void
+    {
+        $this->addTranslationOfElement11WithSong();
+
+        self::assertSame(['song.mp3'], $this->names(1, 1, LanguageAspect::OVERLAYS_ON));
+        // Element 14 is a translation without a default-language parent.
+        self::assertSame(['song.mp3', 'photo.jpg'], $this->names(1, 1, LanguageAspect::OVERLAYS_ON_WITH_FLOATING));
+    }
+
+    private function addTranslationOfElement11WithSong(): void
+    {
+        $connection = $this->get(ConnectionPool::class);
+        $connection->getConnectionForTable('tt_content')->insert('tt_content', ['uid' => 30, 'pid' => 1, 'colPos' => 0, 'sorting' => 128, 'sys_language_uid' => 1, 'l18n_parent' => 11, 'CType' => 'textmedia']);
+        $connection->getConnectionForTable('sys_file_reference')->insert('sys_file_reference', ['uid' => 30, 'pid' => 1, 'uid_local' => 7, 'uid_foreign' => 30, 'tablenames' => 'tt_content', 'fieldname' => 'assets', 'sys_language_uid' => 1]);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function names(int $pageUid, int $languageId, string $overlayType): array
+    {
+        return array_map(
+            static fn(MediaItem $item): string => $item->name,
+            $this->get(PageMediaRepository::class)->findByPage($pageUid, $languageId, $overlayType)
+        );
     }
 
     /**

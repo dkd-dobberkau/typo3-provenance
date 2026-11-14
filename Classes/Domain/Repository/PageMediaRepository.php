@@ -6,6 +6,7 @@ namespace CmsProvenance\Provenance\Domain\Repository;
 
 use CmsProvenance\Provenance\Domain\Model\MediaItem;
 use CmsProvenance\Provenance\Media\MediaIdentity;
+use TYPO3\CMS\Core\Context\LanguageAspect;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\FrontendRestrictionContainer;
@@ -14,7 +15,8 @@ use TYPO3\CMS\Core\Resource\ResourceFactory;
 /**
  * The media files referenced by the visible content elements of a page, in
  * the order they appear: by column, by position in the column, by position
- * in the element. Each file is listed once. Three queries per page, however
+ * in the element. Each file is listed once, and only from fields the
+ * element's content type shows. Four queries per page, however
  * many content elements it has.
  */
 final readonly class PageMediaRepository
@@ -31,11 +33,13 @@ final readonly class PageMediaRepository
     ) {}
 
     /**
+     * @param int $languageId the language content is taken from (LanguageAspect::getContentId())
+     * @param string $overlayType one of the LanguageAspect::OVERLAYS_* constants
      * @return list<MediaItem>
      */
-    public function findByPage(int $pageUid, int $languageId): array
+    public function findByPage(int $pageUid, int $languageId, string $overlayType = LanguageAspect::OVERLAYS_OFF): array
     {
-        $fileUids = $this->referencedFileUids($pageUid, $languageId);
+        $fileUids = $this->referencedFileUids($pageUid, $languageId, $overlayType);
         if ($fileUids === []) {
             return [];
         }
@@ -72,31 +76,129 @@ final readonly class PageMediaRepository
     /**
      * @return list<int> in page order, without duplicates
      */
-    private function referencedFileUids(int $pageUid, int $languageId): array
+    private function referencedFileUids(int $pageUid, int $languageId, string $overlayType): array
     {
+        $elements = $this->shownElements($pageUid, $languageId, $overlayType);
+        if ($elements === []) {
+            return [];
+        }
+
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable('sys_file_reference');
         $queryBuilder->setRestrictions(new FrontendRestrictionContainer());
-        $rows = $queryBuilder
-            ->select('reference.uid_local')
-            ->from('sys_file_reference', 'reference')
-            ->join(
-                'reference',
-                'tt_content',
-                'content',
-                $queryBuilder->expr()->eq('content.uid', $queryBuilder->quoteIdentifier('reference.uid_foreign'))
-            )
+        $references = $queryBuilder
+            ->select('uid_local', 'uid_foreign', 'fieldname')
+            ->from('sys_file_reference')
             ->where(
-                $queryBuilder->expr()->eq('reference.tablenames', $queryBuilder->createNamedParameter('tt_content')),
-                $queryBuilder->expr()->eq('content.pid', $queryBuilder->createNamedParameter($pageUid, Connection::PARAM_INT)),
-                $queryBuilder->expr()->in('content.sys_language_uid', $queryBuilder->createNamedParameter([$languageId, -1], Connection::PARAM_INT_ARRAY))
+                $queryBuilder->expr()->eq('tablenames', $queryBuilder->createNamedParameter('tt_content')),
+                $queryBuilder->expr()->in('uid_foreign', $queryBuilder->createNamedParameter(array_keys($elements), Connection::PARAM_INT_ARRAY))
             )
-            ->orderBy('content.colPos')
-            ->addOrderBy('content.sorting')
-            ->addOrderBy('reference.sorting_foreign')
+            ->orderBy('sorting_foreign')
             ->executeQuery()
-            ->fetchFirstColumn();
+            ->fetchAllAssociative();
+        $byElement = [];
+        foreach ($references as $reference) {
+            $byElement[(int)$reference['uid_foreign']][] = $reference;
+        }
 
-        return array_values(array_unique(array_map(intval(...), $rows)));
+        $fileUids = [];
+        foreach ($elements as $elementUid => $contentType) {
+            foreach ($byElement[$elementUid] ?? [] as $reference) {
+                if ($this->isShown($contentType, (string)$reference['fieldname'])) {
+                    $fileUids[] = (int)$reference['uid_local'];
+                }
+            }
+        }
+
+        return array_values(array_unique($fileUids));
+    }
+
+    /**
+     * The content elements the frontend renders for the language, as
+     * uid => CType in page order. Without overlays (free mode) these are the
+     * records of the language; with overlays, default-language elements are
+     * replaced by their translation, kept untranslated in mixed mode and left
+     * out otherwise, and translations without a parent count only with
+     * floating records.
+     *
+     * @return array<int, string>
+     */
+    private function shownElements(int $pageUid, int $languageId, string $overlayType): array
+    {
+        $overlays = $languageId > 0 && $overlayType !== LanguageAspect::OVERLAYS_OFF;
+        $languages = $overlays ? [0, -1, $languageId] : [$languageId, -1];
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable('tt_content');
+        $queryBuilder->setRestrictions(new FrontendRestrictionContainer());
+        $rows = $queryBuilder
+            ->select('uid', 'sys_language_uid', 'l18n_parent', 'CType')
+            ->from('tt_content')
+            ->where(
+                $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pageUid, Connection::PARAM_INT)),
+                $queryBuilder->expr()->in('sys_language_uid', $queryBuilder->createNamedParameter(array_unique($languages), Connection::PARAM_INT_ARRAY))
+            )
+            ->orderBy('colPos')
+            ->addOrderBy('sorting')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        if (!$overlays) {
+            return array_column($rows, 'CType', 'uid');
+        }
+
+        $translations = [];
+        foreach ($rows as $row) {
+            if ((int)$row['sys_language_uid'] === $languageId && (int)$row['l18n_parent'] > 0) {
+                $translations[(int)$row['l18n_parent']] = $row;
+            }
+        }
+        $elements = [];
+        foreach ($rows as $row) {
+            $isTranslation = (int)$row['sys_language_uid'] === $languageId;
+            if (!$isTranslation) {
+                $shown = $translations[(int)$row['uid']] ?? ($overlayType === LanguageAspect::OVERLAYS_MIXED ? $row : null);
+            } else {
+                $isFloating = (int)$row['l18n_parent'] === 0;
+                $shown = $isFloating && $overlayType === LanguageAspect::OVERLAYS_ON_WITH_FLOATING ? $row : null;
+            }
+            if ($shown !== null) {
+                $elements[(int)$shown['uid']] = (string)$shown['CType'];
+            }
+        }
+
+        return $elements;
+    }
+
+    /**
+     * DataHandler keeps file references when an editor switches the content
+     * type; only fields the type shows are on the page. Unknown types are
+     * kept, as nothing can be said about them.
+     */
+    private function isShown(string $contentType, string $field): bool
+    {
+        $types = $GLOBALS['TCA']['tt_content']['types'] ?? [];
+        if (!isset($types[$contentType]['showitem'])) {
+            return true;
+        }
+
+        return in_array($field, $this->fieldsOf((string)$types[$contentType]['showitem']), true);
+    }
+
+    /**
+     * @return list<string> field names of a showitem string, palettes expanded
+     */
+    private function fieldsOf(string $showitem): array
+    {
+        $fields = [];
+        foreach (explode(',', $showitem) as $item) {
+            $parts = array_map(trim(...), explode(';', $item));
+            if ($parts[0] === '--palette--') {
+                $palette = $GLOBALS['TCA']['tt_content']['palettes'][$parts[2] ?? '']['showitem'] ?? '';
+                $fields = [...$fields, ...$this->fieldsOf((string)$palette)];
+            } elseif ($parts[0] !== '' && !str_starts_with($parts[0], '--')) {
+                $fields[] = $parts[0];
+            }
+        }
+
+        return $fields;
     }
 
     /**
