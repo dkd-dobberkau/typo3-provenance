@@ -104,10 +104,18 @@ final readonly class PagesModuleController
     private function withEditLinks(array $rows, ServerRequestInterface $request): array
     {
         $returnUrl = (string)$request->getUri();
+        $mayEditMetadata = $this->backendUser()->check('tables_modify', 'sys_file_metadata');
         foreach ($rows as &$row) {
             $row['editUrl'] = $row['mayEdit']
                 ? (string)$this->uriBuilder->buildUriFromRoute('record_edit', ['edit' => ['pages' => [$row['uid'] => 'edit']], 'returnUrl' => $returnUrl])
                 : '';
+            foreach ($row['media']['incomplete'] as &$file) {
+                $file['editUrl'] = $mayEditMetadata && $file['metadataUid'] > 0
+                    ? (string)$this->uriBuilder->buildUriFromRoute('record_edit', ['edit' => ['sys_file_metadata' => [$file['metadataUid'] => 'edit']], 'returnUrl' => $returnUrl])
+                    : '';
+                $file['needsBackfill'] = array_intersect($file['lacks'], ['identifier', 'hash']) !== [];
+            }
+            unset($file);
         }
 
         return $rows;

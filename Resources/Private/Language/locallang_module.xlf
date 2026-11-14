@@ -19,6 +19,15 @@
             <trans-unit id="pages.column.page"><source>Page</source></trans-unit>
             <trans-unit id="pages.column.level"><source>Level</source></trans-unit>
             <trans-unit id="pages.column.missing"><source>Missing for the next level</source></trans-unit>
+            <trans-unit id="pages.column.media"><source>Media</source></trans-unit>
+            <trans-unit id="media.none"><source>No media</source></trans-unit>
+            <trans-unit id="media.complete"><source>%d, all complete</source></trans-unit>
+            <trans-unit id="media.incomplete"><source>%1$d of %2$d incomplete</source></trans-unit>
+            <trans-unit id="media.lacks.creator"><source>no creator</source></trans-unit>
+            <trans-unit id="media.lacks.license"><source>no licence</source></trans-unit>
+            <trans-unit id="media.lacks.identifier"><source>no identifier</source></trans-unit>
+            <trans-unit id="media.lacks.hash"><source>no current hash</source></trans-unit>
+            <trans-unit id="media.backfillHint"><source>Run vendor/bin/typo3 provenance:backfill-media to assign identifiers and hashes.</source></trans-unit>
             <trans-unit id="pages.column.published"><source>First published</source></trans-unit>
             <trans-unit id="pages.column.revised"><source>Last substantive revision</source></trans-unit>
             <trans-unit id="pages.column.confirmed"><source>Confirmed as still accurate</source></trans-unit>

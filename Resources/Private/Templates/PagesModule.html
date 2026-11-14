@@ -31,6 +31,7 @@
                                     <th><f:translate key="{ll}pages.column.page"/></th>
                                     <th><f:translate key="{ll}pages.column.level"/></th>
                                     <th><f:translate key="{ll}pages.column.missing"/></th>
+                                    <th><f:translate key="{ll}pages.column.media"/></th>
                                     <th><f:translate key="{ll}pages.column.published"/></th>
                                     <th><f:translate key="{ll}pages.column.revised"/></th>
                                     <th><f:translate key="{ll}pages.column.confirmed"/></th>
@@ -60,6 +61,7 @@
                                                 <f:else><f:if condition="{row.hasRecord}"><f:translate key="{ll}pages.complete"/></f:if></f:else>
                                             </f:if>
                                         </td>
+                                        <td><f:render partial="Overview/Media" arguments="{media: row.media, ll: ll}"/></td>
                                         <td><f:render partial="Overview/Date" arguments="{date: row.datePublished}"/></td>
                                         <td><f:render partial="Overview/Date" arguments="{date: row.lastSubstantiveRevision}"/></td>
                                         <td><f:render partial="Overview/Date" arguments="{date: row.maintainedDate}"/></td>

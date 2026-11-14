@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CmsProvenance\Provenance\Backend;
 
+use CmsProvenance\Provenance\Domain\Repository\PageMediaRepository;
 use CmsProvenance\Provenance\Domain\Repository\ProvenanceRecordRepository;
 use CmsProvenance\Provenance\Event\ModifyPageOverviewRowEvent;
 use CmsProvenance\Provenance\Frontend\JsonLdBuilder;
@@ -34,10 +35,11 @@ final readonly class PageOverview
         private ConformanceLevel $conformanceLevel,
         private GeneratorName $generatorName,
         private EventDispatcherInterface $eventDispatcher,
+        private PageMediaRepository $pageMediaRepository,
     ) {}
 
     /**
-     * @return list<array{uid: int, title: string, pageHidden: bool, hasRecord: bool, recordHidden: bool, level: ?int, missing: list<string>, datePublished: ?string, lastSubstantiveRevision: ?string, maintainedDate: ?string, mayEdit: bool, extra: array<string, mixed>}>
+     * @return list<array{uid: int, title: string, pageHidden: bool, hasRecord: bool, recordHidden: bool, level: ?int, missing: list<string>, datePublished: ?string, lastSubstantiveRevision: ?string, maintainedDate: ?string, mayEdit: bool, media: array{total: int, incomplete: list<array{fileUid: int, metadataUid: int, name: string, lacks: list<string>}>}, extra: array<string, mixed>}>
      */
     public function rows(int $rootUid, int $depth, BackendUserAuthentication $user): array
     {
@@ -71,12 +73,40 @@ final readonly class PageOverview
                 'lastSubstantiveRevision' => $jsonLd['lastSubstantiveRevision'] ?? null,
                 'maintainedDate' => $jsonLd['maintainedDate'] ?? null,
                 'mayEdit' => $mayModifyPages && $user->doesUserHaveAccess($page, Permission::PAGE_EDIT),
+                'media' => $this->media($pageId),
                 'extra' => [],
             ];
             $rows[] = $this->eventDispatcher->dispatch(new ModifyPageOverviewRowEvent($row, $pageId))->getRow();
         }
 
         return $rows;
+    }
+
+    /**
+     * Media data never affects the level; the summary only tells editors
+     * which files to complete. Live data and default language, like the rows.
+     *
+     * @return array{total: int, incomplete: list<array{fileUid: int, metadataUid: int, name: string, lacks: list<string>}>}
+     */
+    private function media(int $pageId): array
+    {
+        $items = $this->pageMediaRepository->findByPage($pageId, 0);
+        // Without EXT:filemetadata there is no creator field to complete.
+        $hasCreatorField = isset($GLOBALS['TCA']['sys_file_metadata']['columns']['creator']);
+        $incomplete = [];
+        foreach ($items as $item) {
+            $lacks = array_keys(array_filter([
+                'creator' => $hasCreatorField && $item->creator === null,
+                'license' => $item->license === null,
+                'identifier' => $item->mediaUri === null,
+                'hash' => $item->sha256 === null,
+            ]));
+            if ($lacks !== []) {
+                $incomplete[] = ['fileUid' => $item->fileUid, 'metadataUid' => $item->metadataUid, 'name' => $item->name, 'lacks' => $lacks];
+            }
+        }
+
+        return ['total' => count($items), 'incomplete' => $incomplete];
     }
 
     /**

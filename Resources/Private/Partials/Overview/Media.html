@@ -1,0 +1,26 @@
+<html
+    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    data-namespace-typo3-fluid="true"
+>
+<f:if condition="{media.total} == 0">
+    <f:then><span class="text-body-secondary"><f:translate key="{ll}media.none"/></span></f:then>
+    <f:else if="{media.incomplete}">
+        <details>
+            <summary><f:translate key="{ll}media.incomplete" arguments="{0: '{media.incomplete -> f:count()}', 1: media.total}"/></summary>
+            <ul class="mb-0 ps-3">
+                <f:for each="{media.incomplete}" as="file">
+                    <li>
+                        <f:if condition="{file.editUrl}">
+                            <f:then><a href="{file.editUrl}">{file.name}</a></f:then>
+                            <f:else>{file.name}</f:else>
+                        </f:if>:
+                        <f:for each="{file.lacks}" as="lack" iteration="i"><f:translate key="{ll}media.lacks.{lack}"/><f:if condition="!{i.isLast}">, </f:if></f:for>
+                        <f:if condition="{file.needsBackfill}"><br><span class="text-body-secondary"><f:translate key="{ll}media.backfillHint"/></span></f:if>
+                    </li>
+                </f:for>
+            </ul>
+        </details>
+    </f:else>
+    <f:else><f:translate key="{ll}media.complete" arguments="{0: media.total}"/></f:else>
+</f:if>
+</html>

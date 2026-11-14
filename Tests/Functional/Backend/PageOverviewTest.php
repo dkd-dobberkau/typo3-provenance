@@ -13,12 +13,35 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 final class PageOverviewTest extends FunctionalTestCase
 {
+    protected array $coreExtensionsToLoad = ['filemetadata'];
     protected array $testExtensionsToLoad = ['cms-provenance/provenance'];
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->importCSVDataSet(__DIR__ . '/Fixtures/PageOverview.csv');
+    }
+
+    #[Test]
+    public function incompleteMediaAreListedWithWhatTheyLack(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/PageOverviewMedia.csv');
+
+        $row = $this->row(1);
+
+        self::assertSame(3, $row['media']['total']);
+        self::assertSame([
+            ['fileUid' => 2, 'metadataUid' => 2, 'name' => 'legacy.png', 'lacks' => ['license']],
+            ['fileUid' => 3, 'metadataUid' => 3, 'name' => 'new.png', 'lacks' => ['identifier', 'hash']],
+        ], $row['media']['incomplete']);
+        self::assertSame(2, $row['level']);
+        self::assertSame([], $row['missing']);
+    }
+
+    #[Test]
+    public function pageWithoutMediaHasAnEmptyMediaSummary(): void
+    {
+        self::assertSame(['total' => 0, 'incomplete' => []], $this->row(2)['media']);
     }
 
     #[Test]

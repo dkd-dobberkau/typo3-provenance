@@ -19,6 +19,7 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 final class PagesModuleControllerTest extends FunctionalTestCase
 {
+    protected array $coreExtensionsToLoad = ['filemetadata'];
     protected array $testExtensionsToLoad = ['cms-provenance/provenance'];
 
     protected function setUp(): void
@@ -37,6 +38,19 @@ final class PagesModuleControllerTest extends FunctionalTestCase
         self::assertStringContainsString('Incomplete', $body);
         self::assertStringContainsString('L2', $body);
         self::assertStringContainsString('Author &quot;Grace Hopper&quot; has no profile URI.', $body);
+    }
+
+    #[Test]
+    public function incompleteMediaLinkToTheirMetadataAndNameTheBackfill(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/PageOverviewMedia.csv');
+
+        $body = $this->render(['id' => 1, 'depth' => 0]);
+
+        self::assertStringContainsString('2 of 3 incomplete', $body);
+        self::assertStringContainsString('legacy.png', $body);
+        self::assertStringContainsString('edit%5Bsys_file_metadata%5D%5B2%5D=edit', $body);
+        self::assertStringContainsString('provenance:backfill-media', $body);
     }
 
     #[Test]
