@@ -87,4 +87,54 @@ final class ConformanceLevelTest extends UnitTestCase
     {
         self::assertSame($expected, (new ConformanceLevel())->of($record, $signed, $auditEndpoint));
     }
+
+    public static function missingDataProvider(): \Generator
+    {
+        yield 'complete record' => [self::completeRecord(), []];
+        yield 'no vocabulary' => [
+            ['@context' => 'https://schema.org'] + self::completeRecord(),
+            ['The record does not use the vocabulary https://cms-provenance.org/ns/v1.'],
+        ];
+        foreach (['@type', '@id', 'datePublished', 'lastSubstantiveRevision', 'generator'] as $member) {
+            $record = self::completeRecord();
+            unset($record[$member]);
+            yield 'without ' . $member => [$record, ['The record has no ' . $member . '.']];
+        }
+        yield 'no author' => [['author' => []] + self::completeRecord(), ['The record names no author.']];
+        yield 'author without URI' => [
+            ['author' => [['@type' => 'Person', 'name' => 'Ada']]] + self::completeRecord(),
+            ['Author "Ada" has no profile URI.'],
+        ];
+        yield 'author without name and URI' => [
+            ['author' => [['@type' => 'Person']]] + self::completeRecord(),
+            ['An author has no profile URI.'],
+        ];
+        yield 'source without access date' => [
+            ['citation' => [['url' => 'https://example.org/a', 'name' => 'A']]] + self::completeRecord(),
+            ['Source https://example.org/a has no access date.'],
+        ];
+        yield 'source without description' => [
+            ['citation' => [['url' => 'https://example.org/a', 'accessDate' => '2026-11-13']]] + self::completeRecord(),
+            ['Source https://example.org/a has no description.'],
+        ];
+        $record = ['author' => [['@type' => 'Person', 'name' => 'Ada']], 'citation' => [['url' => 'https://example.org/a']]] + self::completeRecord();
+        unset($record['generator']);
+        yield 'several problems in order' => [$record, [
+            'The record has no generator.',
+            'Author "Ada" has no profile URI.',
+            'Source https://example.org/a has no description.',
+            'Source https://example.org/a has no access date.',
+        ]];
+    }
+
+    /**
+     * @param array<string, mixed> $record
+     * @param list<string> $expected
+     */
+    #[Test]
+    #[DataProvider('missingDataProvider')]
+    public function missingExplainsWhatKeepsTheRecordBelowL2(array $record, array $expected): void
+    {
+        self::assertSame($expected, (new ConformanceLevel())->missing($record));
+    }
 }

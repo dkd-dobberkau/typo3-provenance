@@ -44,37 +44,61 @@ final readonly class ConformanceLevel
      */
     public function isComplete(array $record): bool
     {
+        return $this->missing($record) === [];
+    }
+
+    /**
+     * Why a record is not complete (and so stays at L1), in the order of
+     * Section 3.1; empty for a complete record.
+     *
+     * @param array<string, mixed> $record
+     * @return list<string>
+     */
+    public function missing(array $record): array
+    {
+        $missing = [];
         $context = $record['@context'] ?? null;
         if (!in_array(self::VOCABULARY, is_array($context) ? $context : [$context], true)) {
-            return false;
+            $missing[] = 'The record does not use the vocabulary ' . self::VOCABULARY . '.';
         }
         foreach (self::REQUIRED as $member) {
             if (!is_string($record[$member] ?? null) || $record[$member] === '') {
-                return false;
+                $missing[] = 'The record has no ' . $member . '.';
             }
         }
 
         $authors = $record['author'] ?? null;
         if (!is_array($authors) || $authors === [] || !array_is_list($authors)) {
-            return false;
-        }
-        foreach ($authors as $author) {
-            if (!$this->hasValue($author, '@id')) {
-                return false;
+            $missing[] = 'The record names no author.';
+        } else {
+            foreach ($authors as $author) {
+                if (!$this->hasValue($author, '@id')) {
+                    $missing[] = $this->hasValue($author, 'name')
+                        ? sprintf('Author "%s" has no profile URI.', $author['name'])
+                        : 'An author has no profile URI.';
+                }
             }
         }
 
         $sources = $record['citation'] ?? [];
         if (!is_array($sources)) {
-            return false;
+            $missing[] = 'The sources of the record are not a list.';
+            $sources = [];
         }
         foreach ($sources as $source) {
-            if (!$this->hasValue($source, 'url') || !$this->hasValue($source, 'name') || !$this->hasValue($source, 'accessDate')) {
-                return false;
+            $label = $this->hasValue($source, 'url') ? 'Source ' . $source['url'] : 'A source';
+            if (!$this->hasValue($source, 'url')) {
+                $missing[] = 'A source has no URL.';
+            }
+            if (!$this->hasValue($source, 'name')) {
+                $missing[] = $label . ' has no description.';
+            }
+            if (!$this->hasValue($source, 'accessDate')) {
+                $missing[] = $label . ' has no access date.';
             }
         }
 
-        return true;
+        return $missing;
     }
 
     private function hasValue(mixed $object, string $member): bool
