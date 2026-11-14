@@ -4,13 +4,20 @@ declare(strict_types=1);
 
 namespace CmsProvenance\Provenance\Frontend;
 
+use CmsProvenance\Provenance\Domain\Repository\PageMediaRepository;
 use CmsProvenance\Provenance\Domain\Repository\ProvenanceRecordRepository;
 use CmsProvenance\Provenance\Event\BeforeJsonLdEmittedEvent;
+use CmsProvenance\Provenance\Media\MediaCacheTags;
+use CmsProvenance\Provenance\Service\AbsoluteUrlResolver;
 use CmsProvenance\Provenance\Service\ConformanceLevel;
 use CmsProvenance\Provenance\Service\GeneratorName;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
+use TYPO3\CMS\Core\Cache\CacheDataCollector;
+use TYPO3\CMS\Core\Cache\CacheTag;
+use TYPO3\CMS\Core\Http\Uri;
+use TYPO3\CMS\Core\Site\Entity\SiteLanguage;
 use TYPO3\CMS\Frontend\Page\PageInformation;
 
 /**
@@ -25,6 +32,10 @@ final readonly class JsonLdHeaderData
         private EventDispatcherInterface $eventDispatcher,
         private ConformanceLevel $conformanceLevel,
         private GeneratorName $generatorName,
+        private PageMediaRepository $pageMediaRepository,
+        private MediaJsonLdBuilder $mediaJsonLdBuilder,
+        private MediaCacheTags $mediaCacheTags,
+        private AbsoluteUrlResolver $urlResolver,
     ) {}
 
     // Required for userFunc callbacks since TYPO3 14; ignored by TYPO3 13.
@@ -48,6 +59,8 @@ final readonly class JsonLdHeaderData
             (int)($page['SYS_LASTCHANGED'] ?? 0),
             $this->generatorName->value()
         );
+        // Before the event, so facts and signing see the media too.
+        $jsonLd += $this->media($pageInformation->getId(), $request);
         $event = $this->eventDispatcher->dispatch(new BeforeJsonLdEmittedEvent($jsonLd, $record, $request));
         $jsonLd = $event->getJsonLd();
         if ($jsonLd === []) {
@@ -65,5 +78,28 @@ final readonly class JsonLdHeaderData
         );
 
         return '<script type="application/ld+json">' . $json . '</script>';
+    }
+
+    /**
+     * The media members of the record; tags the cached page with each listed
+     * file, so a change to one of them re-issues this record.
+     *
+     * @return array<string, mixed>
+     */
+    private function media(int $pageUid, ServerRequestInterface $request): array
+    {
+        $language = $request->getAttribute('language');
+        $items = $this->pageMediaRepository->findByPage($pageUid, $language instanceof SiteLanguage ? $language->getLanguageId() : 0);
+        $cacheCollector = $request->getAttribute('frontend.cache.collector');
+        if ($cacheCollector instanceof CacheDataCollector) {
+            foreach ($items as $item) {
+                $cacheCollector->addCacheTags(new CacheTag($this->mediaCacheTags->tagFor($item->fileUid)));
+            }
+        }
+
+        return $this->mediaJsonLdBuilder->build(
+            $items,
+            fn(string $url): string => $this->urlResolver->resolve(new Uri($url), $request)
+        );
     }
 }

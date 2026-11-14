@@ -78,6 +78,30 @@ final class JsonLdOutputTest extends FunctionalTestCase
         self::assertNull($this->fetchJsonLd('/hidden-record'));
     }
 
+    #[Test]
+    public function recordListsImagesOfThePage(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/MediaPages.csv');
+
+        $image = $this->fetchJsonLd('/')['image'][0];
+
+        self::assertSame('urn:uuid:00000000-0000-4000-8000-0000000000f1', $image['@id']);
+        self::assertStringStartsWith('http://localhost/fileadmin/', $image['contentUrl']);
+        self::assertSame(str_repeat('1', 64), $image['sha256']);
+        self::assertSame('https://creativecommons.org/licenses/by/4.0/', $image['license']);
+    }
+
+    #[Test]
+    public function incompleteMediaKeepLevelTwo(): void
+    {
+        $this->importCSVDataSet(__DIR__ . '/Fixtures/MediaPages.csv');
+
+        $jsonLd = $this->fetchJsonLd('/');
+
+        self::assertSame(2, $jsonLd['cpsConformance']);
+        self::assertSame(['@type' => 'ImageObject', 'contentUrl' => 'http://localhost/fileadmin/legacy.png', 'encodingFormat' => 'image/png'], $jsonLd['image'][1]);
+    }
+
     private function fetchJsonLd(string $path): ?array
     {
         return $this->extractJsonLd($this->fetchBody($path));

@@ -1,0 +1,18 @@
+"sys_file_storage"
+,"uid","pid","name","driver","configuration","is_default","is_browsable","is_public","is_writable","is_online"
+,1,0,"fileadmin","Local","<?xml version=""1.0"" encoding=""utf-8"" standalone=""yes"" ?><T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""basePath""><value index=""vDEF"">fileadmin/</value></field><field index=""pathType""><value index=""vDEF"">relative</value></field><field index=""caseSensitive""><value index=""vDEF"">1</value></field></language></sheet></data></T3FlexForms>",1,1,1,1,1
+"tt_content"
+,"uid","pid","colPos","sorting","sys_language_uid","CType","header"
+,10,1,0,256,0,"textmedia","With images"
+"sys_file"
+,"uid","pid","storage","type","identifier","identifier_hash","folder_hash","name","extension","mime_type","sha1","missing","tx_provenance_media_uri","tx_provenance_sha256","tx_provenance_sha256_of"
+,1,0,1,2,"/photo.jpg","0","0","photo.jpg","jpg","image/jpeg","aaa",0,"urn:uuid:00000000-0000-4000-8000-0000000000f1","1111111111111111111111111111111111111111111111111111111111111111","aaa"
+,2,0,1,2,"/legacy.png","0","0","legacy.png","png","image/png","bbb",0,"","",""
+"sys_file_metadata"
+,"uid","pid","file","sys_language_uid","tx_provenance_license"
+,1,0,1,0,"https://creativecommons.org/licenses/by/4.0/"
+,2,0,2,0,""
+"sys_file_reference"
+,"uid","pid","uid_local","uid_foreign","tablenames","fieldname","sorting_foreign"
+,1,1,1,10,"tt_content","assets",1
+,2,1,2,10,"tt_content","assets",2

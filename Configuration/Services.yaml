@@ -12,6 +12,9 @@ services:
   CmsProvenance\Provenance\Hook\AssignDocumentIdentifier:
     public: true
 
+  CmsProvenance\Provenance\Hook\FlushMediaPages:
+    public: true
+
   # Instantiated by the USER content object through GeneralUtility::makeInstance()
   CmsProvenance\Provenance\Frontend\JsonLdHeaderData:
     public: true
