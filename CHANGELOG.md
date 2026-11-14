@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Media provenance: the record of a page lists the images, videos and audio
+  files of its content elements (`image`, `video`, `audio`) with stable
+  identifier, SHA-256 of the original, creator, copyright, licence, source
+  and IPTC digital source type. New metadata fields for licence and source
+  type; EXT:filemetadata is suggested for creator, copyright and source.
+  Hashes are kept in a history table; `provenance:backfill-media` fills
+  existing files. Pages are re-rendered when a listed file or its metadata
+  changes. The Pages submodule shows media that lack creator or licence.
+
 - Backend module "Provenance" with the submodule "Pages": per page of a
   subtree, whether it has a record, its level without a signature and what
   is missing. Sub-extensions add submodules; `PageSubtree` and

@@ -82,6 +82,34 @@ Add a source for every external document the content relies on.
     Archive (``https://web.archive.org/``), so the source can still be read
     when the original moves or changes.
 
+..  _editors-media:
+
+Images, videos and audio
+========================
+
+The record of a page lists the images, videos and audio files of its content
+elements, with what is known about where they come from. Enter this once per
+file, in the file's metadata (:guilabel:`Filelist`, edit the file's metadata);
+every page that uses the file shows it.
+
+:guilabel:`Creator`, :guilabel:`Copyright`, :guilabel:`Source`
+    Who made the file, the copyright notice and where it comes from. A source
+    that is a web address is published as the file's origin. These fields
+    need the system extension :guilabel:`filemetadata`.
+
+:guilabel:`Licence (URL)`
+    The web address of the licence, for example
+    ``https://creativecommons.org/licenses/by/4.0/``.
+
+:guilabel:`How the media came to exist`
+    The IPTC digital source type: a photo or recording from real life, a
+    digitised original, human or AI edits, or created with generative AI.
+    Leave it empty if you do not know; nothing is published then.
+
+Missing data never lowers the level of a page. The :guilabel:`Media` column of
+the Provenance module shows which files of a page lack a creator or licence
+and links to their metadata.
+
 ..  _editors-identity:
 
 Your public identity

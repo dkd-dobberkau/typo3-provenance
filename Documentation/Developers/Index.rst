@@ -213,6 +213,9 @@ Commands
     *   -   ``provenance:backfill [--dry-run]``
         -   provenance
         -   Records for existing standard pages
+    *   -   ``provenance:backfill-media [--dry-run]``
+        -   provenance
+        -   Identifiers and SHA-256 for media files that lack a current one
     *   -   ``provenance:keys:generate``
         -   provenance_signing
         -   First site key
@@ -241,6 +244,10 @@ Tables
     *   -   ``tx_provenance_source``
         -   provenance
         -   Sources of a record
+    *   -   ``tx_provenance_media_hash``
+        -   provenance
+        -   Every SHA-256 a media file has had, with ``valid_from`` and
+            ``valid_until`` (empty for the current one)
     *   -   ``tx_provenancesigning_record``
         -   provenance_signing
         -   Latest signed record per page and language
@@ -250,6 +257,26 @@ Tables
 
 ``pages`` and ``tt_content`` get ``provenance_document_uid``; ``be_users``
 gets ``external_identity_uri`` and ``external_identity_verified``.
+``sys_file`` gets ``tx_provenance_media_uri``, ``tx_provenance_sha256`` and
+``tx_provenance_sha256_of`` (the ``sha1`` the hash was computed for);
+``sys_file_metadata`` gets ``tx_provenance_license`` and
+``tx_provenance_digital_source_type``.
+
+..  _developers-media:
+
+Media in the record
+===================
+
+``JsonLdHeaderData`` adds the members ``image``, ``video`` and ``audio``
+(schema.org ``ImageObject``, ``VideoObject``, ``AudioObject``) before it
+dispatches ``BeforeJsonLdEmittedEvent``, so listeners and the signature see
+them. ``PageMediaRepository::findByPage()`` reads the file references of the
+visible content elements; ``MediaJsonLdBuilder`` turns them into entries.
+
+The cached page is tagged ``sys_file_<uid>`` for every listed file, the tag
+TYPO3's own cache auto-tagging uses. Saving a file's metadata, replacing a
+file or a changed hash flush that tag, so the page is rendered and signed
+again with current data.
 
 ..  _developers-tests:
 

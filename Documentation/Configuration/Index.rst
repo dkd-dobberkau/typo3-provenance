@@ -123,6 +123,28 @@ Set in :guilabel:`Admin Tools > Settings > Extension Configuration` or in
     Extension ``provenance_audit``. ``Cache-Control`` lifetime of the audit
     listing in seconds.
 
+..  _configuration-media:
+
+Media provenance
+================
+
+Records list the images, videos and audio files referenced by the content
+elements of a page. Install the system extension ``filemetadata``
+(``composer require typo3/cms-filemetadata``) so editors can enter creator,
+copyright and source; without it only licence and digital source type are
+available.
+
+Every media file gets a stable identifier and a SHA-256 of its bytes when it is
+uploaded or replaced. For files that existed before the extension was
+installed, or that were changed outside TYPO3, run:
+
+..  code-block:: bash
+
+    vendor/bin/typo3 provenance:backfill-media
+
+Hashing reads every media file once; on large file storages run it outside
+peak hours. ``--dry-run`` only reports how many files would be updated.
+
 ..  _configuration-content-area:
 
 The signed content area
