@@ -20,13 +20,15 @@
         "typo3/cms-core": "^13.4 || ^14.0"
     },
     "require-dev": {
+        "b13/ai-bots-love-markdown": "^0.6",
         "typo3/cms-filemetadata": "^13.4 || ^14.0",
         "typo3/cms-fluid": "^13.4 || ^14.0",
         "typo3/cms-frontend": "^13.4 || ^14.0",
         "typo3/testing-framework": "^9.7"
     },
     "suggest": {
-        "typo3/cms-filemetadata": "Adds creator, copyright and source to file metadata, which the provenance record lists for media"
+        "typo3/cms-filemetadata": "Adds creator, copyright and source to file metadata, which the provenance record lists for media",
+        "b13/ai-bots-love-markdown": "Serves pages as Markdown; the provenance record is added to its front matter"
     },
     "autoload": {
         "psr-4": {

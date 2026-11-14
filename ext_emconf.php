@@ -14,6 +14,7 @@ $EM_CONF[$_EXTKEY] = [
         'conflicts' => [],
         'suggests' => [
             'filemetadata' => '13.4.0-14.99.99',
+            'ai_bots_love_markdown' => '0.6.0-0.99.99',
         ],
     ],
 ];

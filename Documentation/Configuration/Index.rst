@@ -149,6 +149,27 @@ earlier, run:
 Hashing reads every media file once; on large file storages run it outside
 peak hours. ``--dry-run`` only reports how many files would be updated.
 
+..  _configuration-markdown:
+
+Markdown version of pages
+=========================
+
+With ``b13/ai-bots-love-markdown`` installed (``composer require
+b13/ai-bots-love-markdown``), every page is also available as Markdown. The
+provenance extension adds to its YAML front matter:
+
+``cps``
+    The identifier of the record (``record``), the level the page reaches
+    (``conformance``) and ``signedDocument``, the URL of the HTML page. When the
+    page is signed, also ``contentHash`` and ``key``. The signature covers the
+    HTML page, not the Markdown; verify a page through ``signedDocument``.
+
+MX fields
+    With the site set ``cms-provenance/provenance-mx``, the front matter follows
+    the three zones of the MX Carrier Formats note: ``created`` (instead of
+    ``date``), ``modified``, ``type: info-doc``, ``tags`` from keywords and
+    categories, and the MX fields under ``mx``.
+
 ..  _configuration-content-area:
 
 The signed content area

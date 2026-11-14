@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
+- Markdown version of pages: with `b13/ai-bots-love-markdown`, the YAML front
+  matter names the provenance record and points to the signed HTML page
+  (`cps`); with the MX site set it follows the three MX zones (`created`,
+  `type`, `tags`, `mx`). The Markdown itself is not signed.
+
 - Media provenance: the record of a page lists the images, videos and audio
   files of its content elements (`image`, `video`, `audio`) with stable
   identifier, SHA-256 of the original, creator, copyright, licence, source
